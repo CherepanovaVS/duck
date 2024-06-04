@@ -50,13 +50,7 @@ public class DuckFlyTest extends TestNGCitrusSpringSupport {
     runner.variable("wingsState", "FIXED");
 
     createDuck(runner);
-
-    runner.$(http().client("http://localhost:2222")
-            .receive()
-            .response(HttpStatus.OK)
-            .message()
-            .extract(fromBody().expression("$.id", "duckId"))
-    );
+    setDuckId(runner);
 
     flyDuck(runner);
 
@@ -77,13 +71,7 @@ public class DuckFlyTest extends TestNGCitrusSpringSupport {
     runner.variable("wingsState", "UNDEFINED");
 
     createDuck(runner);
-
-    runner.$(http().client("http://localhost:2222")
-            .receive()
-            .response(HttpStatus.OK)
-            .message()
-            .extract(fromBody().expression("$.id", "duckId"))
-    );
+    setDuckId(runner);
 
     flyDuck(runner);
 
@@ -142,6 +130,19 @@ public class DuckFlyTest extends TestNGCitrusSpringSupport {
             .response(HttpStatus.OK)
             .message()
             .contentType(MediaType.APPLICATION_JSON_VALUE).body(responseMessage)
+    );
+  }
+
+  /**
+   * Сохранение id созданной утки.
+   * @param runner
+   */
+  public void setDuckId(TestCaseRunner runner) {
+    runner.$(http().client("http://localhost:2222")
+            .receive()
+            .response(HttpStatus.OK)
+            .message()
+            .extract(fromBody().expression("$.id", "duckId"))
     );
   }
 }

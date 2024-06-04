@@ -149,6 +149,10 @@ public class DuckQuackTest extends TestNGCitrusSpringSupport {
     return responseSound;
   }
 
+  /**
+   * Сохранение id созданной утки.
+   * @param runner
+   */
   public void setDuckId(TestCaseRunner runner) {
     runner.$(http().client("http://localhost:2222")
             .receive()

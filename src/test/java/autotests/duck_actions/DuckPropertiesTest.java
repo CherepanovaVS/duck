@@ -25,25 +25,13 @@ public class DuckPropertiesTest extends TestNGCitrusSpringSupport {
     runner.variable("wingsState", "ACTIVE");
 
     createDuck(runner);
-
-    runner.$(http().client("http://localhost:2222")
-            .receive()
-            .response(HttpStatus.OK)
-            .message()
-            .extract(fromBody().expression("$.id", "duckId"))
-    );
+    setDuckId(runner);
 
     Long duckId = Long.valueOf(context.getVariable("duckId"));
 
     if (duckId % 2 == 0) {
       createDuck(runner);
-
-      runner.$(http().client("http://localhost:2222")
-              .receive()
-              .response(HttpStatus.OK)
-              .message()
-              .extract(fromBody().expression("$.id", "duckId"))
-      );
+      setDuckId(runner);
     }
 
     getPropertiesDuck(runner);
@@ -70,25 +58,13 @@ public class DuckPropertiesTest extends TestNGCitrusSpringSupport {
     runner.variable("wingsState", "ACTIVE");
 
     createDuck(runner);
-
-    runner.$(http().client("http://localhost:2222")
-            .receive()
-            .response(HttpStatus.OK)
-            .message()
-            .extract(fromBody().expression("$.id", "duckId"))
-    );
+    setDuckId(runner);
 
     Long duckId = Long.valueOf(context.getVariable("duckId"));
 
     if (duckId % 2 != 0) {
       createDuck(runner);
-
-      runner.$(http().client("http://localhost:2222")
-              .receive()
-              .response(HttpStatus.OK)
-              .message()
-              .extract(fromBody().expression("$.id", "duckId"))
-      );
+      setDuckId(runner);
     }
 
     getPropertiesDuck(runner);
@@ -149,6 +125,19 @@ public class DuckPropertiesTest extends TestNGCitrusSpringSupport {
             .response(HttpStatus.OK)
             .message()
             .contentType(MediaType.APPLICATION_JSON_VALUE).body(responseMessage)
+    );
+  }
+
+  /**
+   * Сохранение id созданной утки.
+   * @param runner
+   */
+  public void setDuckId(TestCaseRunner runner) {
+    runner.$(http().client("http://localhost:2222")
+            .receive()
+            .response(HttpStatus.OK)
+            .message()
+            .extract(fromBody().expression("$.id", "duckId"))
     );
   }
 }

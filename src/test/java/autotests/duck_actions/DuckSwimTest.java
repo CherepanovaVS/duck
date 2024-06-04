@@ -24,13 +24,7 @@ public class DuckSwimTest extends TestNGCitrusSpringSupport {
     runner.variable("wingsState", "ACTIVE");
 
     createDuck(runner);
-
-    runner.$(http().client("http://localhost:2222")
-            .receive()
-            .response(HttpStatus.OK)
-            .message()
-            .extract(fromBody().expression("$.id", "duckId"))
-    );
+    setDuckId(runner);
 
     swimDuck(runner, "${duckId}");
 
@@ -51,13 +45,7 @@ public class DuckSwimTest extends TestNGCitrusSpringSupport {
     runner.variable("wingsState", "FIXED");
 
     createDuck(runner);
-
-    runner.$(http().client("http://localhost:2222")
-            .receive()
-            .response(HttpStatus.OK)
-            .message()
-            .extract(fromBody().expression("$.id", "duckId"))
-    );
+    setDuckId(runner);
 
     Long duckId = Long.valueOf(context.getVariable("duckId"));
     // +100, чтобы получить несуществующий id. Но так как тесты запускаются параллельно, нужно учесть количество
@@ -132,6 +120,19 @@ public class DuckSwimTest extends TestNGCitrusSpringSupport {
             .response(HttpStatus.NOT_FOUND)
             .message()
             .contentType(MediaType.APPLICATION_JSON_VALUE).body(responseMessage)
+    );
+  }
+
+  /**
+   * Сохранение id созданной утки.
+   * @param runner
+   */
+  public void setDuckId(TestCaseRunner runner) {
+    runner.$(http().client("http://localhost:2222")
+            .receive()
+            .response(HttpStatus.OK)
+            .message()
+            .extract(fromBody().expression("$.id", "duckId"))
     );
   }
 }
