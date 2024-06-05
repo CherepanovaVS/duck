@@ -1,38 +1,72 @@
-package autotests.duck_crud;
+package autotests.tests;
 
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Test;
 
-import static com.consol.citrus.TestActionBuilder.TYPE_RESOLVER;
 import static com.consol.citrus.http.actions.HttpActionBuilder.http;
 import static com.consol.citrus.validation.DelegatingPayloadVariableExtractor.Builder.fromBody;
 
-public class DuckUpdateTest extends TestNGCitrusSpringSupport {
-  @Test (description = "Проверка изменения у утки цвета и высоты.")
+public class DuckPropertiesTest extends TestNGCitrusSpringSupport {
+  @Test (description = "Проверка характеристик утки с нечетным id, material = rubber.")
   @CitrusTest
-  public void successfulUpdateColorAndHeight(@Optional @CitrusResource TestCaseRunner runner) {
-    createDuck(runner, "yellow", 0.1, "rubber", "quack", "ACTIVE");
+  public void successfulGetPropertiesNotEvenId(@Optional @CitrusResource TestCaseRunner runner,
+                                               @Optional @CitrusResource TestContext context) {
+    String color = "yellow";
+    double height = 0.1;
+    String material = "rubber";
+    String sound = "quack";
+    String wingsState = "ACTIVE";
+    createDuck(runner, color, height, material, sound, wingsState);
     getDuckId(runner);
-    updateDuck(runner, "red", 5, "rubber", "quack");
+
+    Long duckId = Long.valueOf(context.getVariable("duckId"));
+    if (duckId % 2 == 0) {
+      createDuck(runner, color, height, material, sound, wingsState);
+      getDuckId(runner);
+    }
+
+    getPropertiesDuck(runner);
     validateResponse(runner, "{\n"
-            + "  \"message\": \"Duck with id = ${duckId} is updated\"\n"
+            + "  \"color\": \"" + color + "\",\n"
+            + "  \"height\": " + height + ",\n"
+            + "  \"material\": \"" + material + "\",\n"
+            + "  \"sound\": \"" + sound + "\",\n"
+            + "  \"wingsState\": \"" + wingsState + "\"\n"
             + "}");
   }
 
-  @Test (description = "Проверка изменения у утки цвета и звука.")
+  @Test (description = "Проверка характеристик утки с четным id, material = wood.")
   @CitrusTest
-  public void successfulUpdateColorAndSound(@Optional @CitrusResource TestCaseRunner runner) {
-    createDuck(runner, "yellow", 0.1, "rubber", "quack", "ACTIVE");
+  public void successfulGetPropertiesEvenId(@Optional @CitrusResource TestCaseRunner runner,
+                                            @Optional @CitrusResource TestContext context) {
+    String color = "yellow";
+    double height = 0.1;
+    String material = "wood";
+    String sound = "quack";
+    String wingsState = "ACTIVE";
+    createDuck(runner, color, height, material, sound, wingsState);
     getDuckId(runner);
-    updateDuck(runner, "green", 0.1, "rubber", "QUACK");
+
+    Long duckId = Long.valueOf(context.getVariable("duckId"));
+    if (duckId % 2 != 0) {
+      createDuck(runner, color, height, material, sound, wingsState);
+      getDuckId(runner);
+    }
+
+    getPropertiesDuck(runner);
     validateResponse(runner, "{\n"
-            + "  \"message\": \"Duck with id = ${duckId} is updated\"\n"
+            + "  \"color\": \"" + color + "\",\n"
+            + "  \"height\": " + height + ",\n"
+            + "  \"material\": \"" + material + "\",\n"
+            + "  \"sound\": \"" + sound + "\",\n"
+            + "  \"wingsState\": \"" + wingsState + "\"\n"
             + "}");
   }
 
@@ -62,29 +96,21 @@ public class DuckUpdateTest extends TestNGCitrusSpringSupport {
   }
 
   /**
-   * Изменение параметров утки.
+   * Получение характеристик утки.
    * @param runner
-   * @param color
-   * @param height
-   * @param material
-   * @param sound
    */
-  public void updateDuck(TestCaseRunner runner, String color, double height, String material, String sound) {
+  public void getPropertiesDuck(TestCaseRunner runner) {
     runner.$(http().client("http://localhost:2222")
             .send()
-            .put("/api/duck/update")
+            .get("/api/duck/action/properties")
             .message()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .queryParam("color", color)
-            .queryParam("height", String.valueOf(height))
             .queryParam("id", "${duckId}")
-            .queryParam("material", material)
-            .queryParam("sound", sound)
     );
   }
 
   /**
-   * Валидация ответа при изменении параметров утки.
+   * Валидация ответа при получении характеристик утки.
    * @param runner
    * @param responseMessage
    */

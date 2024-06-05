@@ -1,9 +1,8 @@
-package autotests.duck_actions;
+package autotests.tests;
 
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.context.TestContext;
 import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -13,60 +12,37 @@ import org.testng.annotations.Test;
 import static com.consol.citrus.http.actions.HttpActionBuilder.http;
 import static com.consol.citrus.validation.DelegatingPayloadVariableExtractor.Builder.fromBody;
 
-public class DuckPropertiesTest extends TestNGCitrusSpringSupport {
-  @Test (description = "Проверка характеристик утки с нечетным id, material = rubber.")
+public class DuckFlyTest extends TestNGCitrusSpringSupport {
+  @Test (description = "Проверка действия утки - лететь с активными крыльями.")
   @CitrusTest
-  public void successfulGetPropertiesNotEvenId(@Optional @CitrusResource TestCaseRunner runner,
-                                               @Optional @CitrusResource TestContext context) {
-    String color = "yellow";
-    double height = 0.1;
-    String material = "rubber";
-    String sound = "quack";
-    String wingsState = "ACTIVE";
-    createDuck(runner, color, height, material, sound, wingsState);
+  public void successfulFlyActiveWings(@Optional @CitrusResource TestCaseRunner runner) {
+    createDuck(runner, "yellow", 0.1, "rubber", "quack", "ACTIVE");
     getDuckId(runner);
-
-    Long duckId = Long.valueOf(context.getVariable("duckId"));
-    if (duckId % 2 == 0) {
-      createDuck(runner, color, height, material, sound, wingsState);
-      getDuckId(runner);
-    }
-
-    getPropertiesDuck(runner);
+    flyDuck(runner);
     validateResponse(runner, "{\n"
-            + "  \"color\": \"" + color + "\",\n"
-            + "  \"height\": " + height + ",\n"
-            + "  \"material\": \"" + material + "\",\n"
-            + "  \"sound\": \"" + sound + "\",\n"
-            + "  \"wingsState\": \"" + wingsState + "\"\n"
+            + "  \"message\": \"I'm flying\"\n"
             + "}");
   }
 
-  @Test (description = "Проверка характеристик утки с четным id, material = wood.")
+  @Test (description = "Проверка действия утки - лететь со связанными крыльями.")
   @CitrusTest
-  public void successfulGetPropertiesEvenId(@Optional @CitrusResource TestCaseRunner runner,
-                                            @Optional @CitrusResource TestContext context) {
-    String color = "yellow";
-    double height = 0.1;
-    String material = "wood";
-    String sound = "quack";
-    String wingsState = "ACTIVE";
-    createDuck(runner, color, height, material, sound, wingsState);
+  public void successfulFlyFixedWings(@Optional @CitrusResource TestCaseRunner runner) {
+    createDuck(runner, "yellow", 0.1, "rubber", "quack", "FIXED");
     getDuckId(runner);
-
-    Long duckId = Long.valueOf(context.getVariable("duckId"));
-    if (duckId % 2 != 0) {
-      createDuck(runner, color, height, material, sound, wingsState);
-      getDuckId(runner);
-    }
-
-    getPropertiesDuck(runner);
+    flyDuck(runner);
     validateResponse(runner, "{\n"
-            + "  \"color\": \"" + color + "\",\n"
-            + "  \"height\": " + height + ",\n"
-            + "  \"material\": \"" + material + "\",\n"
-            + "  \"sound\": \"" + sound + "\",\n"
-            + "  \"wingsState\": \"" + wingsState + "\"\n"
+            + "  \"message\": \"I can't fly\"\n"
+            + "}");
+  }
+
+  @Test (description = "Проверка действия утки - лететь с неопределенным состоянием крыльев.")
+  @CitrusTest
+  public void successfulFlyUndefinedWings(@Optional @CitrusResource TestCaseRunner runner) {
+    createDuck(runner, "yellow", 0.1, "rubber", "quack", "UNDEFINED");
+    getDuckId(runner);
+    flyDuck(runner);
+    validateResponse(runner, "{\n"
+            + "  \"message\": \"Wings are not detected :(\"\n"
             + "}");
   }
 
@@ -96,13 +72,13 @@ public class DuckPropertiesTest extends TestNGCitrusSpringSupport {
   }
 
   /**
-   * Получение характеристик утки.
+   * Действие утки - лететь.
    * @param runner
    */
-  public void getPropertiesDuck(TestCaseRunner runner) {
+  public void flyDuck(TestCaseRunner runner) {
     runner.$(http().client("http://localhost:2222")
             .send()
-            .get("/api/duck/action/properties")
+            .get("/api/duck/action/fly")
             .message()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .queryParam("id", "${duckId}")
@@ -110,7 +86,7 @@ public class DuckPropertiesTest extends TestNGCitrusSpringSupport {
   }
 
   /**
-   * Валидация ответа при получении характеристик утки.
+   * Валидация ответа.
    * @param runner
    * @param responseMessage
    */

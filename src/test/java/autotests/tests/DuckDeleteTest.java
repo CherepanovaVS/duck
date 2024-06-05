@@ -1,4 +1,4 @@
-package autotests.duck_crud;
+package autotests.tests;
 
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;

@@ -1,8 +1,9 @@
-package autotests.duck_actions;
+package autotests.tests;
 
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -12,37 +13,33 @@ import org.testng.annotations.Test;
 import static com.consol.citrus.http.actions.HttpActionBuilder.http;
 import static com.consol.citrus.validation.DelegatingPayloadVariableExtractor.Builder.fromBody;
 
-public class DuckFlyTest extends TestNGCitrusSpringSupport {
-  @Test (description = "Проверка действия утки - лететь с активными крыльями.")
+public class DuckSwimTest extends TestNGCitrusSpringSupport {
+  @Test (description = "Проверка действия утки - плыть с существующим id.")
   @CitrusTest
-  public void successfulFlyActiveWings(@Optional @CitrusResource TestCaseRunner runner) {
+  public void successfulSwimExistId(@Optional @CitrusResource TestCaseRunner runner) {
     createDuck(runner, "yellow", 0.1, "rubber", "quack", "ACTIVE");
     getDuckId(runner);
-    flyDuck(runner);
-    validateResponse(runner, "{\n"
-            + "  \"message\": \"I'm flying\"\n"
+    swimDuck(runner, "${duckId}");
+    validateResponseOk(runner, "{\n"
+            + "  \"message\": \"I'm swimming\"\n"
             + "}");
   }
 
-  @Test (description = "Проверка действия утки - лететь со связанными крыльями.")
+  @Test (description = "Проверка действия утки - плыть с несуществующим id.")
   @CitrusTest
-  public void successfulFlyFixedWings(@Optional @CitrusResource TestCaseRunner runner) {
+  public void successfulSwimNotExistId(@Optional @CitrusResource TestCaseRunner runner,
+                                       @Optional @CitrusResource TestContext context) {
     createDuck(runner, "yellow", 0.1, "rubber", "quack", "FIXED");
     getDuckId(runner);
-    flyDuck(runner);
-    validateResponse(runner, "{\n"
-            + "  \"message\": \"I can't fly\"\n"
-            + "}");
-  }
 
-  @Test (description = "Проверка действия утки - лететь с неопределенным состоянием крыльев.")
-  @CitrusTest
-  public void successfulFlyUndefinedWings(@Optional @CitrusResource TestCaseRunner runner) {
-    createDuck(runner, "yellow", 0.1, "rubber", "quack", "UNDEFINED");
-    getDuckId(runner);
-    flyDuck(runner);
-    validateResponse(runner, "{\n"
-            + "  \"message\": \"Wings are not detected :(\"\n"
+    Long duckId = Long.valueOf(context.getVariable("duckId"));
+    // +100, чтобы получить несуществующий id. Но так как тесты запускаются параллельно, нужно учесть количество
+    // тестов, чтобы точно получить несуществующий id.
+    context.setVariable("notExistDuckId", duckId + 100);
+
+    swimDuck(runner, "${notExistDuckId}");
+    validateResponseNotFound(runner, "{\n"
+            + "  \"message\": \"Duck with id = ${notExistDuckId} isn't found\"\n"
             + "}");
   }
 
@@ -72,16 +69,16 @@ public class DuckFlyTest extends TestNGCitrusSpringSupport {
   }
 
   /**
-   * Действие утки - лететь.
+   * Действие утки - плыть.
    * @param runner
    */
-  public void flyDuck(TestCaseRunner runner) {
+  public void swimDuck(TestCaseRunner runner, String query) {
     runner.$(http().client("http://localhost:2222")
             .send()
-            .get("/api/duck/action/fly")
+            .get("/api/duck/action/swim")
             .message()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .queryParam("id", "${duckId}")
+            .queryParam("id", query)
     );
   }
 
@@ -90,10 +87,24 @@ public class DuckFlyTest extends TestNGCitrusSpringSupport {
    * @param runner
    * @param responseMessage
    */
-  public void validateResponse(TestCaseRunner runner, String responseMessage) {
+  public void validateResponseOk(TestCaseRunner runner, String responseMessage) {
     runner.$(http().client("http://localhost:2222")
             .receive()
             .response(HttpStatus.OK)
+            .message()
+            .contentType(MediaType.APPLICATION_JSON_VALUE).body(responseMessage)
+    );
+  }
+
+  /**
+   * Валидация ответа.
+   * @param runner
+   * @param responseMessage
+   */
+  public void validateResponseNotFound(TestCaseRunner runner, String responseMessage) {
+    runner.$(http().client("http://localhost:2222")
+            .receive()
+            .response(HttpStatus.NOT_FOUND)
             .message()
             .contentType(MediaType.APPLICATION_JSON_VALUE).body(responseMessage)
     );
