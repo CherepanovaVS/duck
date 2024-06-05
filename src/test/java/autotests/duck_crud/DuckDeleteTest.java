@@ -33,11 +33,9 @@ public class DuckDeleteTest extends TestNGCitrusSpringSupport {
 
     deleteDuck(runner);
 
-    String responseMessage = "{\n"
+    validateResponse(runner, "{\n"
             + "  \"message\": \"Duck is deleted\"\n"
-            + "}";
-
-    validateResponse(runner, responseMessage);
+            + "}");
   }
 
   /**

@@ -40,12 +40,9 @@ public class DuckQuackTest extends TestNGCitrusSpringSupport {
     quackDuck(runner);
 
     String responseSound = getResponseSound(context);
-
-    String responseMessage = "{\n"
+    validateResponse(runner, "{\n"
             + "  \"sound\": \"" + responseSound + "\"\n"
-            + "}";
-
-    validateResponse(runner, responseMessage);
+            + "}");
   }
 
   @Test (description = "Проверка действия утки - крякать с четным id.")
@@ -74,12 +71,9 @@ public class DuckQuackTest extends TestNGCitrusSpringSupport {
     quackDuck(runner);
 
     String responseSound = getResponseSound(context);
-
-    String responseMessage = "{\n"
+    validateResponse(runner, "{\n"
             + "  \"sound\": \"" + responseSound + "\"\n"
-            + "}";
-
-    validateResponse(runner, responseMessage);
+            + "}");
   }
 
   /**

@@ -28,11 +28,9 @@ public class DuckSwimTest extends TestNGCitrusSpringSupport {
 
     swimDuck(runner, "${duckId}");
 
-    String responseMessage = "{\n"
+    validateResponseOk(runner, "{\n"
             + "  \"message\": \"I'm swimming\"\n"
-            + "}";
-
-    validateResponseOk(runner, responseMessage);
+            + "}");
   }
 
   @Test (description = "Проверка действия утки - плыть с несуществующим id.")
@@ -54,11 +52,9 @@ public class DuckSwimTest extends TestNGCitrusSpringSupport {
 
     swimDuck(runner, "${notExistDuckId}");
 
-    String responseMessage = "{\n"
+    validateResponseNotFound(runner, "{\n"
             + "  \"message\": \"Duck with id = ${notExistDuckId} isn't found\"\n"
-            + "}";
-
-    validateResponseNotFound(runner, responseMessage);
+            + "}");
   }
 
   /**

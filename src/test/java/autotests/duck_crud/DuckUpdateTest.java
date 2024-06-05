@@ -29,11 +29,9 @@ public class DuckUpdateTest extends TestNGCitrusSpringSupport {
     runner.variable("height", 5);
     updateDuck(runner);
 
-    String responseMessage = "{\n"
+    validateResponse(runner, "{\n"
             + "  \"message\": \"Duck with id = ${duckId} is updated\"\n"
-            + "}";
-
-    validateResponse(runner, responseMessage);
+            + "}");
   }
 
   @Test (description = "Проверка изменения у утки цвета и звука.")
@@ -52,11 +50,9 @@ public class DuckUpdateTest extends TestNGCitrusSpringSupport {
     runner.variable("sound", "QUACK");
     updateDuck(runner);
 
-    String responseMessage = "{\n"
+    validateResponse(runner, "{\n"
             + "  \"message\": \"Duck with id = ${duckId} is updated\"\n"
-            + "}";
-
-    validateResponse(runner, responseMessage);
+            + "}");
   }
 
   /**

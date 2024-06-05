@@ -33,11 +33,9 @@ public class DuckFlyTest extends TestNGCitrusSpringSupport {
 
     flyDuck(runner);
 
-    String responseMessage = "{\n"
+    validateResponse(runner, "{\n"
             + "  \"message\": \"I'm flying\"\n"
-            + "}";
-
-    validateResponse(runner, responseMessage);
+            + "}");
   }
 
   @Test (description = "Проверка действия утки - лететь со связанными крыльями.")
@@ -54,11 +52,9 @@ public class DuckFlyTest extends TestNGCitrusSpringSupport {
 
     flyDuck(runner);
 
-    String responseMessage = "{\n"
+    validateResponse(runner, "{\n"
             + "  \"message\": \"I can't fly\"\n"
-            + "}";
-
-    validateResponse(runner, responseMessage);
+            + "}");
   }
 
   @Test (description = "Проверка действия утки - лететь с неопределенным состоянием крыльев.")
@@ -75,14 +71,9 @@ public class DuckFlyTest extends TestNGCitrusSpringSupport {
 
     flyDuck(runner);
 
-    // Здесь я указала фактический результат, так как в документации нет такого состояния крыльев.
-    // Когда обсуждали это с Еленой, она сказала, что в целом нельзя содать утку с неопределенным состоянием крыльев,
-    // поэтому возможно такого кейса не должно быть для действия fly.
-    String responseMessage = "{\n"
+    validateResponse(runner, "{\n"
             + "  \"message\": \"Wings are not detected :(\"\n"
-            + "}";
-
-    validateResponse(runner, responseMessage);
+            + "}");
   }
 
   /**

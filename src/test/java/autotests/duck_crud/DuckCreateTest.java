@@ -23,16 +23,14 @@ public class DuckCreateTest extends TestNGCitrusSpringSupport {
 
     createDuck(runner);
 
-    String responseMessage = "{\n"
+    validateResponse(runner, "{\n"
             + "  \"color\": \"${color}\",\n"
             + "  \"height\": ${height},\n"
             + "  \"id\": \"@isNumber()@\",\n"
             + "  \"material\": \"${material}\",\n"
             + "  \"sound\": \"${sound}\",\n"
             + "  \"wingsState\": \"${wingsState}\"\n"
-            + "}";
-
-    validateResponse(runner, responseMessage);
+            + "}");
   }
 
   @Test (description = "Проверка создания утки с material = wood.")
@@ -46,16 +44,14 @@ public class DuckCreateTest extends TestNGCitrusSpringSupport {
 
     createDuck(runner);
 
-    String responseMessage = "{\n"
+    validateResponse(runner, "{\n"
             + "  \"color\": \"${color}\",\n"
             + "  \"height\": ${height},\n"
             + "  \"id\": \"@isNumber()@\",\n"
             + "  \"material\": \"${material}\",\n"
             + "  \"sound\": \"${sound}\",\n"
             + "  \"wingsState\": \"${wingsState}\"\n"
-            + "}";
-
-    validateResponse(runner, responseMessage);
+            + "}");
   }
 
   /**

@@ -36,15 +36,13 @@ public class DuckPropertiesTest extends TestNGCitrusSpringSupport {
 
     getPropertiesDuck(runner);
 
-    String responseMessage = "{\n"
+    validateResponse(runner, "{\n"
             + "  \"color\": \"${color}\",\n"
             + "  \"height\": ${height},\n"
             + "  \"material\": \"${material}\",\n"
             + "  \"sound\": \"${sound}\",\n"
             + "  \"wingsState\": \"${wingsState}\"\n"
-            + "}";
-
-    validateResponse(runner, responseMessage);
+            + "}");
   }
 
   @Test (description = "Проверка характеристик утки с четным id, material = wood.")
@@ -69,15 +67,13 @@ public class DuckPropertiesTest extends TestNGCitrusSpringSupport {
 
     getPropertiesDuck(runner);
 
-    String responseMessage = "{\n"
+    validateResponse(runner, "{\n"
             + "  \"color\": \"${color}\",\n"
             + "  \"height\": ${height},\n"
             + "  \"material\": \"${material}\",\n"
             + "  \"sound\": \"${sound}\",\n"
             + "  \"wingsState\": \"${wingsState}\"\n"
-            + "}";
-
-    validateResponse(runner, responseMessage);
+            + "}");
   }
 
   /**
