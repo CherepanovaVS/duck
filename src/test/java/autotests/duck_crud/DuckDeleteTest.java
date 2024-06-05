@@ -17,14 +17,7 @@ public class DuckDeleteTest extends TestNGCitrusSpringSupport {
   @CitrusTest
   public void successfulDelete(@Optional @CitrusResource TestCaseRunner runner) {
     createDuck(runner, "yellow", 0.1, "rubber", "quack", "ACTIVE");
-
-    runner.$(http().client("http://localhost:2222")
-            .receive()
-            .response(HttpStatus.OK)
-            .message()
-            .extract(fromBody().expression("$.id", "duckId"))
-    );
-
+    getDuckId(runner);
     deleteDuck(runner);
     validateResponse(runner, "{\n"
             + "  \"message\": \"Duck is deleted\"\n"
@@ -81,6 +74,19 @@ public class DuckDeleteTest extends TestNGCitrusSpringSupport {
             .response(HttpStatus.OK)
             .message()
             .contentType(MediaType.APPLICATION_JSON_VALUE).body(responseMessage)
+    );
+  }
+
+  /**
+   * Сохранение id созданной утки.
+   * @param runner
+   */
+  public void getDuckId(TestCaseRunner runner) {
+    runner.$(http().client("http://localhost:2222")
+            .receive()
+            .response(HttpStatus.OK)
+            .message()
+            .extract(fromBody().expression("$.id", "duckId"))
     );
   }
 }

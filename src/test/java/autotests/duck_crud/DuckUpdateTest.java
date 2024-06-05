@@ -18,7 +18,7 @@ public class DuckUpdateTest extends TestNGCitrusSpringSupport {
   @CitrusTest
   public void successfulUpdateColorAndHeight(@Optional @CitrusResource TestCaseRunner runner) {
     createDuck(runner, "yellow", 0.1, "rubber", "quack", "ACTIVE");
-    setDuckId(runner);
+    getDuckId(runner);
     updateDuck(runner, "red", 5, "rubber", "quack");
     validateResponse(runner, "{\n"
             + "  \"message\": \"Duck with id = ${duckId} is updated\"\n"
@@ -29,7 +29,7 @@ public class DuckUpdateTest extends TestNGCitrusSpringSupport {
   @CitrusTest
   public void successfulUpdateColorAndSound(@Optional @CitrusResource TestCaseRunner runner) {
     createDuck(runner, "yellow", 0.1, "rubber", "quack", "ACTIVE");
-    setDuckId(runner);
+    getDuckId(runner);
     updateDuck(runner, "green", 0.1, "rubber", "QUACK");
     validateResponse(runner, "{\n"
             + "  \"message\": \"Duck with id = ${duckId} is updated\"\n"
@@ -101,7 +101,7 @@ public class DuckUpdateTest extends TestNGCitrusSpringSupport {
    * Сохранение id созданной утки.
    * @param runner
    */
-  public void setDuckId(TestCaseRunner runner) {
+  public void getDuckId(TestCaseRunner runner) {
     runner.$(http().client("http://localhost:2222")
             .receive()
             .response(HttpStatus.OK)

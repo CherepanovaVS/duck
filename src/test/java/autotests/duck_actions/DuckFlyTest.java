@@ -17,14 +17,7 @@ public class DuckFlyTest extends TestNGCitrusSpringSupport {
   @CitrusTest
   public void successfulFlyActiveWings(@Optional @CitrusResource TestCaseRunner runner) {
     createDuck(runner, "yellow", 0.1, "rubber", "quack", "ACTIVE");
-
-    runner.$(http().client("http://localhost:2222")
-            .receive()
-            .response(HttpStatus.OK)
-            .message()
-            .extract(fromBody().expression("$.id", "duckId"))
-    );
-
+    getDuckId(runner);
     flyDuck(runner);
     validateResponse(runner, "{\n"
             + "  \"message\": \"I'm flying\"\n"
@@ -35,7 +28,7 @@ public class DuckFlyTest extends TestNGCitrusSpringSupport {
   @CitrusTest
   public void successfulFlyFixedWings(@Optional @CitrusResource TestCaseRunner runner) {
     createDuck(runner, "yellow", 0.1, "rubber", "quack", "FIXED");
-    setDuckId(runner);
+    getDuckId(runner);
     flyDuck(runner);
     validateResponse(runner, "{\n"
             + "  \"message\": \"I can't fly\"\n"
@@ -46,7 +39,7 @@ public class DuckFlyTest extends TestNGCitrusSpringSupport {
   @CitrusTest
   public void successfulFlyUndefinedWings(@Optional @CitrusResource TestCaseRunner runner) {
     createDuck(runner, "yellow", 0.1, "rubber", "quack", "UNDEFINED");
-    setDuckId(runner);
+    getDuckId(runner);
     flyDuck(runner);
     validateResponse(runner, "{\n"
             + "  \"message\": \"Wings are not detected :(\"\n"
@@ -110,7 +103,7 @@ public class DuckFlyTest extends TestNGCitrusSpringSupport {
    * Сохранение id созданной утки.
    * @param runner
    */
-  public void setDuckId(TestCaseRunner runner) {
+  public void getDuckId(TestCaseRunner runner) {
     runner.$(http().client("http://localhost:2222")
             .receive()
             .response(HttpStatus.OK)

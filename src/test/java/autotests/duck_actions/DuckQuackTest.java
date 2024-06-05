@@ -26,13 +26,13 @@ public class DuckQuackTest extends TestNGCitrusSpringSupport {
     int soundCount = 2;
     int repetitionCount = 3;
     createDuck(runner, color, height, material, sound, wingsState);
-    setDuckId(runner);
+    getDuckId(runner);
 
     Long duckId = Long.valueOf(context.getVariable("duckId"));
     // Если id четный, создадим ещё одну утку, чтобы у неё был нечетный id.
     if (duckId % 2 == 0) {
       createDuck(runner, color, height, material, sound, wingsState);
-      setDuckId(runner);
+      getDuckId(runner);
     }
 
     quackDuck(runner, soundCount, repetitionCount);
@@ -55,13 +55,13 @@ public class DuckQuackTest extends TestNGCitrusSpringSupport {
     int soundCount = 2;
     int repetitionCount = 3;
     createDuck(runner, color, height, material, sound, wingsState);
-    setDuckId(runner);
+    getDuckId(runner);
 
     Long duckId = Long.valueOf(context.getVariable("duckId"));
     // Если id нечетный, создадим ещё одну утку, чтобы у неё был четный id.
     if (duckId % 2 != 0) {
       createDuck(runner, color, height, material, sound, wingsState);
-      setDuckId(runner);
+      getDuckId(runner);
     }
 
     quackDuck(runner, soundCount, repetitionCount);
@@ -149,7 +149,7 @@ public class DuckQuackTest extends TestNGCitrusSpringSupport {
    * Сохранение id созданной утки.
    * @param runner
    */
-  public void setDuckId(TestCaseRunner runner) {
+  public void getDuckId(TestCaseRunner runner) {
     runner.$(http().client("http://localhost:2222")
             .receive()
             .response(HttpStatus.OK)

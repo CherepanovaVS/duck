@@ -24,12 +24,12 @@ public class DuckPropertiesTest extends TestNGCitrusSpringSupport {
     String sound = "quack";
     String wingsState = "ACTIVE";
     createDuck(runner, color, height, material, sound, wingsState);
-    setDuckId(runner);
+    getDuckId(runner);
 
     Long duckId = Long.valueOf(context.getVariable("duckId"));
     if (duckId % 2 == 0) {
       createDuck(runner, color, height, material, sound, wingsState);
-      setDuckId(runner);
+      getDuckId(runner);
     }
 
     getPropertiesDuck(runner);
@@ -52,12 +52,12 @@ public class DuckPropertiesTest extends TestNGCitrusSpringSupport {
     String sound = "quack";
     String wingsState = "ACTIVE";
     createDuck(runner, color, height, material, sound, wingsState);
-    setDuckId(runner);
+    getDuckId(runner);
 
     Long duckId = Long.valueOf(context.getVariable("duckId"));
     if (duckId % 2 != 0) {
       createDuck(runner, color, height, material, sound, wingsState);
-      setDuckId(runner);
+      getDuckId(runner);
     }
 
     getPropertiesDuck(runner);
@@ -127,7 +127,7 @@ public class DuckPropertiesTest extends TestNGCitrusSpringSupport {
    * Сохранение id созданной утки.
    * @param runner
    */
-  public void setDuckId(TestCaseRunner runner) {
+  public void getDuckId(TestCaseRunner runner) {
     runner.$(http().client("http://localhost:2222")
             .receive()
             .response(HttpStatus.OK)

@@ -18,7 +18,7 @@ public class DuckSwimTest extends TestNGCitrusSpringSupport {
   @CitrusTest
   public void successfulSwimExistId(@Optional @CitrusResource TestCaseRunner runner) {
     createDuck(runner, "yellow", 0.1, "rubber", "quack", "ACTIVE");
-    setDuckId(runner);
+    getDuckId(runner);
     swimDuck(runner, "${duckId}");
     validateResponseOk(runner, "{\n"
             + "  \"message\": \"I'm swimming\"\n"
@@ -30,7 +30,7 @@ public class DuckSwimTest extends TestNGCitrusSpringSupport {
   public void successfulSwimNotExistId(@Optional @CitrusResource TestCaseRunner runner,
                                        @Optional @CitrusResource TestContext context) {
     createDuck(runner, "yellow", 0.1, "rubber", "quack", "FIXED");
-    setDuckId(runner);
+    getDuckId(runner);
 
     Long duckId = Long.valueOf(context.getVariable("duckId"));
     // +100, чтобы получить несуществующий id. Но так как тесты запускаются параллельно, нужно учесть количество
@@ -114,7 +114,7 @@ public class DuckSwimTest extends TestNGCitrusSpringSupport {
    * Сохранение id созданной утки.
    * @param runner
    */
-  public void setDuckId(TestCaseRunner runner) {
+  public void getDuckId(TestCaseRunner runner) {
     runner.$(http().client("http://localhost:2222")
             .receive()
             .response(HttpStatus.OK)
