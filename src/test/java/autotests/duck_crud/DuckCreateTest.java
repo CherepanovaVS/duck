@@ -15,61 +15,62 @@ public class DuckCreateTest extends TestNGCitrusSpringSupport {
   @Test (description = "Проверка создания утки с material = rubber.")
   @CitrusTest
   public void successfulCreateMaterialRubber(@Optional @CitrusResource TestCaseRunner runner) {
-    runner.variable("color", "yellow");
-    runner.variable("height", 0.1);
-    runner.variable("material", "rubber");
-    runner.variable("sound", "quack");
-    runner.variable("wingsState", "ACTIVE");
-
-    createDuck(runner);
-
+    String color = "yellow";
+    double height = 0.1;
+    String material = "rubber";
+    String sound = "quack";
+    String wingsState = "ACTIVE";
+    createDuck(runner, color, height, material, sound, wingsState);
     validateResponse(runner, "{\n"
-            + "  \"color\": \"${color}\",\n"
-            + "  \"height\": ${height},\n"
+            + "  \"color\": \"" + color + "\",\n"
+            + "  \"height\": " + height + ",\n"
             + "  \"id\": \"@isNumber()@\",\n"
-            + "  \"material\": \"${material}\",\n"
-            + "  \"sound\": \"${sound}\",\n"
-            + "  \"wingsState\": \"${wingsState}\"\n"
+            + "  \"material\": \"" + material + "\",\n"
+            + "  \"sound\": \"" + sound + "\",\n"
+            + "  \"wingsState\": \"" + wingsState + "\"\n"
             + "}");
   }
 
   @Test (description = "Проверка создания утки с material = wood.")
   @CitrusTest
   public void successfulCreateMaterialWood(@Optional @CitrusResource TestCaseRunner runner) {
-    runner.variable("color", "yellow");
-    runner.variable("height", 0.1);
-    runner.variable("material", "wood");
-    runner.variable("sound", "quack");
-    runner.variable("wingsState", "ACTIVE");
-
-    createDuck(runner);
-
+    String color = "yellow";
+    double height = 0.1;
+    String material = "wood";
+    String sound = "quack";
+    String wingsState = "ACTIVE";
+    createDuck(runner, color, height, material, sound, wingsState);
     validateResponse(runner, "{\n"
-            + "  \"color\": \"${color}\",\n"
-            + "  \"height\": ${height},\n"
+            + "  \"color\": \"" + color + "\",\n"
+            + "  \"height\": " + height + ",\n"
             + "  \"id\": \"@isNumber()@\",\n"
-            + "  \"material\": \"${material}\",\n"
-            + "  \"sound\": \"${sound}\",\n"
-            + "  \"wingsState\": \"${wingsState}\"\n"
+            + "  \"material\": \"" + material + "\",\n"
+            + "  \"sound\": \"" + sound + "\",\n"
+            + "  \"wingsState\": \"" + wingsState + "\"\n"
             + "}");
   }
 
   /**
    * Создание утки.
    * @param runner
+   * @param color
+   * @param height
+   * @param material
+   * @param sound
+   * @param wingsState
    */
-  public void createDuck(TestCaseRunner runner) {
+  public void createDuck(TestCaseRunner runner, String color, double height, String material, String sound, String wingsState) {
     runner.$(http().client("http://localhost:2222")
             .send()
             .post("/api/duck/create")
             .message()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body("{\n"
-                    + "  \"color\": \"${color}\",\n"
-                    + "  \"height\": ${height},\n"
-                    + "  \"material\": \"${material}\",\n"
-                    + "  \"sound\": \"${sound}\",\n"
-                    + "  \"wingsState\": \"${wingsState}\"\n"
+                    + "  \"color\": \"" + color + "\",\n"
+                    + "  \"height\": " + height + ",\n"
+                    + "  \"material\": \"" + material + "\",\n"
+                    + "  \"sound\": \"" + sound + "\",\n"
+                    + "  \"wingsState\": \"" + wingsState + "\"\n"
                     + "}")
     );
   }

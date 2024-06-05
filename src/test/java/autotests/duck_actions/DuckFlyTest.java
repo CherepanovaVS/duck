@@ -16,13 +16,7 @@ public class DuckFlyTest extends TestNGCitrusSpringSupport {
   @Test (description = "Проверка действия утки - лететь с активными крыльями.")
   @CitrusTest
   public void successfulFlyActiveWings(@Optional @CitrusResource TestCaseRunner runner) {
-    runner.variable("color", "yellow");
-    runner.variable("height", 0.1);
-    runner.variable("material", "rubber");
-    runner.variable("sound", "quack");
-    runner.variable("wingsState", "ACTIVE");
-
-    createDuck(runner);
+    createDuck(runner, "yellow", 0.1, "rubber", "quack", "ACTIVE");
 
     runner.$(http().client("http://localhost:2222")
             .receive()
@@ -32,7 +26,6 @@ public class DuckFlyTest extends TestNGCitrusSpringSupport {
     );
 
     flyDuck(runner);
-
     validateResponse(runner, "{\n"
             + "  \"message\": \"I'm flying\"\n"
             + "}");
@@ -41,17 +34,9 @@ public class DuckFlyTest extends TestNGCitrusSpringSupport {
   @Test (description = "Проверка действия утки - лететь со связанными крыльями.")
   @CitrusTest
   public void successfulFlyFixedWings(@Optional @CitrusResource TestCaseRunner runner) {
-    runner.variable("color", "yellow");
-    runner.variable("height", 0.1);
-    runner.variable("material", "rubber");
-    runner.variable("sound", "quack");
-    runner.variable("wingsState", "FIXED");
-
-    createDuck(runner);
+    createDuck(runner, "yellow", 0.1, "rubber", "quack", "FIXED");
     setDuckId(runner);
-
     flyDuck(runner);
-
     validateResponse(runner, "{\n"
             + "  \"message\": \"I can't fly\"\n"
             + "}");
@@ -60,17 +45,9 @@ public class DuckFlyTest extends TestNGCitrusSpringSupport {
   @Test (description = "Проверка действия утки - лететь с неопределенным состоянием крыльев.")
   @CitrusTest
   public void successfulFlyUndefinedWings(@Optional @CitrusResource TestCaseRunner runner) {
-    runner.variable("color", "yellow");
-    runner.variable("height", 0.1);
-    runner.variable("material", "rubber");
-    runner.variable("sound", "quack");
-    runner.variable("wingsState", "UNDEFINED");
-
-    createDuck(runner);
+    createDuck(runner, "yellow", 0.1, "rubber", "quack", "UNDEFINED");
     setDuckId(runner);
-
     flyDuck(runner);
-
     validateResponse(runner, "{\n"
             + "  \"message\": \"Wings are not detected :(\"\n"
             + "}");
@@ -79,19 +56,24 @@ public class DuckFlyTest extends TestNGCitrusSpringSupport {
   /**
    * Создание утки.
    * @param runner
+   * @param color
+   * @param height
+   * @param material
+   * @param sound
+   * @param wingsState
    */
-  public void createDuck(TestCaseRunner runner) {
+  public void createDuck(TestCaseRunner runner, String color, double height, String material, String sound, String wingsState) {
     runner.$(http().client("http://localhost:2222")
             .send()
             .post("/api/duck/create")
             .message()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body("{\n"
-                    + "  \"color\": \"${color}\",\n"
-                    + "  \"height\": ${height},\n"
-                    + "  \"material\": \"${material}\",\n"
-                    + "  \"sound\": \"${sound}\",\n"
-                    + "  \"wingsState\": \"${wingsState}\"\n"
+                    + "  \"color\": \"" + color + "\",\n"
+                    + "  \"height\": " + height + ",\n"
+                    + "  \"material\": \"" + material + "\",\n"
+                    + "  \"sound\": \"" + sound + "\",\n"
+                    + "  \"wingsState\": \"" + wingsState + "\"\n"
                     + "}")
     );
   }

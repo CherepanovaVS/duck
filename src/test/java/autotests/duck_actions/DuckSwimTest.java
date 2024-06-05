@@ -17,17 +17,9 @@ public class DuckSwimTest extends TestNGCitrusSpringSupport {
   @Test (description = "Проверка действия утки - плыть с существующим id.")
   @CitrusTest
   public void successfulSwimExistId(@Optional @CitrusResource TestCaseRunner runner) {
-    runner.variable("color", "yellow");
-    runner.variable("height", 0.1);
-    runner.variable("material", "rubber");
-    runner.variable("sound", "quack");
-    runner.variable("wingsState", "ACTIVE");
-
-    createDuck(runner);
+    createDuck(runner, "yellow", 0.1, "rubber", "quack", "ACTIVE");
     setDuckId(runner);
-
     swimDuck(runner, "${duckId}");
-
     validateResponseOk(runner, "{\n"
             + "  \"message\": \"I'm swimming\"\n"
             + "}");
@@ -35,14 +27,9 @@ public class DuckSwimTest extends TestNGCitrusSpringSupport {
 
   @Test (description = "Проверка действия утки - плыть с несуществующим id.")
   @CitrusTest
-  public void successfulSwimNotExistId(@Optional @CitrusResource TestCaseRunner runner, @Optional @CitrusResource TestContext context) {
-    runner.variable("color", "yellow");
-    runner.variable("height", 0.1);
-    runner.variable("material", "rubber");
-    runner.variable("sound", "quack");
-    runner.variable("wingsState", "FIXED");
-
-    createDuck(runner);
+  public void successfulSwimNotExistId(@Optional @CitrusResource TestCaseRunner runner,
+                                       @Optional @CitrusResource TestContext context) {
+    createDuck(runner, "yellow", 0.1, "rubber", "quack", "FIXED");
     setDuckId(runner);
 
     Long duckId = Long.valueOf(context.getVariable("duckId"));
@@ -51,7 +38,6 @@ public class DuckSwimTest extends TestNGCitrusSpringSupport {
     context.setVariable("notExistDuckId", duckId + 100);
 
     swimDuck(runner, "${notExistDuckId}");
-
     validateResponseNotFound(runner, "{\n"
             + "  \"message\": \"Duck with id = ${notExistDuckId} isn't found\"\n"
             + "}");
@@ -60,19 +46,24 @@ public class DuckSwimTest extends TestNGCitrusSpringSupport {
   /**
    * Создание утки.
    * @param runner
+   * @param color
+   * @param height
+   * @param material
+   * @param sound
+   * @param wingsState
    */
-  public void createDuck(TestCaseRunner runner) {
+  public void createDuck(TestCaseRunner runner, String color, double height, String material, String sound, String wingsState) {
     runner.$(http().client("http://localhost:2222")
             .send()
             .post("/api/duck/create")
             .message()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body("{\n"
-                    + "  \"color\": \"${color}\",\n"
-                    + "  \"height\": ${height},\n"
-                    + "  \"material\": \"${material}\",\n"
-                    + "  \"sound\": \"${sound}\",\n"
-                    + "  \"wingsState\": \"${wingsState}\"\n"
+                    + "  \"color\": \"" + color + "\",\n"
+                    + "  \"height\": " + height + ",\n"
+                    + "  \"material\": \"" + material + "\",\n"
+                    + "  \"sound\": \"" + sound + "\",\n"
+                    + "  \"wingsState\": \"" + wingsState + "\"\n"
                     + "}")
     );
   }

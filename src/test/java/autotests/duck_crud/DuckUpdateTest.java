@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Test;
 
+import static com.consol.citrus.TestActionBuilder.TYPE_RESOLVER;
 import static com.consol.citrus.http.actions.HttpActionBuilder.http;
 import static com.consol.citrus.validation.DelegatingPayloadVariableExtractor.Builder.fromBody;
 
@@ -16,19 +17,9 @@ public class DuckUpdateTest extends TestNGCitrusSpringSupport {
   @Test (description = "Проверка изменения у утки цвета и высоты.")
   @CitrusTest
   public void successfulUpdateColorAndHeight(@Optional @CitrusResource TestCaseRunner runner) {
-    runner.variable("color", "yellow");
-    runner.variable("height", 0.1);
-    runner.variable("material", "rubber");
-    runner.variable("sound", "quack");
-    runner.variable("wingsState", "ACTIVE");
-
-    createDuck(runner);
+    createDuck(runner, "yellow", 0.1, "rubber", "quack", "ACTIVE");
     setDuckId(runner);
-
-    runner.variable("color", "red");
-    runner.variable("height", 5);
-    updateDuck(runner);
-
+    updateDuck(runner, "red", 5, "rubber", "quack");
     validateResponse(runner, "{\n"
             + "  \"message\": \"Duck with id = ${duckId} is updated\"\n"
             + "}");
@@ -37,19 +28,9 @@ public class DuckUpdateTest extends TestNGCitrusSpringSupport {
   @Test (description = "Проверка изменения у утки цвета и звука.")
   @CitrusTest
   public void successfulUpdateColorAndSound(@Optional @CitrusResource TestCaseRunner runner) {
-    runner.variable("color", "yellow");
-    runner.variable("height", 0.1);
-    runner.variable("material", "rubber");
-    runner.variable("sound", "quack");
-    runner.variable("wingsState", "ACTIVE");
-
-    createDuck(runner);
+    createDuck(runner, "yellow", 0.1, "rubber", "quack", "ACTIVE");
     setDuckId(runner);
-
-    runner.variable("color", "green");
-    runner.variable("sound", "QUACK");
-    updateDuck(runner);
-
+    updateDuck(runner, "green", 0.1, "rubber", "QUACK");
     validateResponse(runner, "{\n"
             + "  \"message\": \"Duck with id = ${duckId} is updated\"\n"
             + "}");
@@ -58,19 +39,24 @@ public class DuckUpdateTest extends TestNGCitrusSpringSupport {
   /**
    * Создание утки.
    * @param runner
+   * @param color
+   * @param height
+   * @param material
+   * @param sound
+   * @param wingsState
    */
-  public void createDuck(TestCaseRunner runner) {
+  public void createDuck(TestCaseRunner runner, String color, double height, String material, String sound, String wingsState) {
     runner.$(http().client("http://localhost:2222")
             .send()
             .post("/api/duck/create")
             .message()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body("{\n"
-                    + "  \"color\": \"${color}\",\n"
-                    + "  \"height\": ${height},\n"
-                    + "  \"material\": \"${material}\",\n"
-                    + "  \"sound\": \"${sound}\",\n"
-                    + "  \"wingsState\": \"${wingsState}\"\n"
+                    + "  \"color\": \"" + color + "\",\n"
+                    + "  \"height\": " + height + ",\n"
+                    + "  \"material\": \"" + material + "\",\n"
+                    + "  \"sound\": \"" + sound + "\",\n"
+                    + "  \"wingsState\": \"" + wingsState + "\"\n"
                     + "}")
     );
   }
@@ -78,18 +64,22 @@ public class DuckUpdateTest extends TestNGCitrusSpringSupport {
   /**
    * Изменение параметров утки.
    * @param runner
+   * @param color
+   * @param height
+   * @param material
+   * @param sound
    */
-  public void updateDuck(TestCaseRunner runner) {
+  public void updateDuck(TestCaseRunner runner, String color, double height, String material, String sound) {
     runner.$(http().client("http://localhost:2222")
             .send()
             .put("/api/duck/update")
             .message()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .queryParam("color", "${color}")
-            .queryParam("height", "${height}")
+            .queryParam("color", color)
+            .queryParam("height", String.valueOf(height))
             .queryParam("id", "${duckId}")
-            .queryParam("material", "${material}")
-            .queryParam("sound", "${sound}")
+            .queryParam("material", material)
+            .queryParam("sound", sound)
     );
   }
 

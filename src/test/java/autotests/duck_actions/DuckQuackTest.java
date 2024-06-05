@@ -18,28 +18,26 @@ public class DuckQuackTest extends TestNGCitrusSpringSupport {
   @CitrusTest
   public void successfulQuackNotEvenId(@Optional @CitrusResource TestCaseRunner runner,
                                        @Optional @CitrusResource TestContext context) {
-    runner.variable("color", "yellow");
-    runner.variable("height", 0.1);
-    runner.variable("material", "rubber");
-    runner.variable("sound", "quack");
-    runner.variable("wingsState", "ACTIVE");
-    runner.variable("repetitionCount", 3);
-    runner.variable("soundCount", 2);
-
-    createDuck(runner);
+    String color = "yellow";
+    double height = 0.1;
+    String material = "rubber";
+    String sound = "quack";
+    String wingsState = "ACTIVE";
+    int soundCount = 2;
+    int repetitionCount = 3;
+    createDuck(runner, color, height, material, sound, wingsState);
     setDuckId(runner);
 
     Long duckId = Long.valueOf(context.getVariable("duckId"));
-
     // Если id четный, создадим ещё одну утку, чтобы у неё был нечетный id.
     if (duckId % 2 == 0) {
-      createDuck(runner);
+      createDuck(runner, color, height, material, sound, wingsState);
       setDuckId(runner);
     }
 
-    quackDuck(runner);
+    quackDuck(runner, soundCount, repetitionCount);
 
-    String responseSound = getResponseSound(context);
+    String responseSound = getResponseSound(sound, soundCount, repetitionCount);
     validateResponse(runner, "{\n"
             + "  \"sound\": \"" + responseSound + "\"\n"
             + "}");
@@ -49,28 +47,26 @@ public class DuckQuackTest extends TestNGCitrusSpringSupport {
   @CitrusTest
   public void successfulQuackEvenId(@Optional @CitrusResource TestCaseRunner runner,
                                     @Optional @CitrusResource TestContext context) {
-    runner.variable("color", "yellow");
-    runner.variable("height", 0.1);
-    runner.variable("material", "rubber");
-    runner.variable("sound", "quack");
-    runner.variable("wingsState", "ACTIVE");
-    runner.variable("repetitionCount", 3);
-    runner.variable("soundCount", 2);
-
-    createDuck(runner);
+    String color = "yellow";
+    double height = 0.1;
+    String material = "rubber";
+    String sound = "quack";
+    String wingsState = "ACTIVE";
+    int soundCount = 2;
+    int repetitionCount = 3;
+    createDuck(runner, color, height, material, sound, wingsState);
     setDuckId(runner);
 
     Long duckId = Long.valueOf(context.getVariable("duckId"));
-
     // Если id нечетный, создадим ещё одну утку, чтобы у неё был четный id.
     if (duckId % 2 != 0) {
-      createDuck(runner);
+      createDuck(runner, color, height, material, sound, wingsState);
       setDuckId(runner);
     }
 
-    quackDuck(runner);
+    quackDuck(runner, soundCount, repetitionCount);
 
-    String responseSound = getResponseSound(context);
+    String responseSound = getResponseSound(sound, soundCount, repetitionCount);
     validateResponse(runner, "{\n"
             + "  \"sound\": \"" + responseSound + "\"\n"
             + "}");
@@ -79,19 +75,24 @@ public class DuckQuackTest extends TestNGCitrusSpringSupport {
   /**
    * Создание утки.
    * @param runner
+   * @param color
+   * @param height
+   * @param material
+   * @param sound
+   * @param wingsState
    */
-  public void createDuck(TestCaseRunner runner) {
+  public void createDuck(TestCaseRunner runner, String color, double height, String material, String sound, String wingsState) {
     runner.$(http().client("http://localhost:2222")
             .send()
             .post("/api/duck/create")
             .message()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body("{\n"
-                    + "  \"color\": \"${color}\",\n"
-                    + "  \"height\": ${height},\n"
-                    + "  \"material\": \"${material}\",\n"
-                    + "  \"sound\": \"${sound}\",\n"
-                    + "  \"wingsState\": \"${wingsState}\"\n"
+                    + "  \"color\": \"" + color + "\",\n"
+                    + "  \"height\": " + height + ",\n"
+                    + "  \"material\": \"" + material + "\",\n"
+                    + "  \"sound\": \"" + sound + "\",\n"
+                    + "  \"wingsState\": \"" + wingsState + "\"\n"
                     + "}")
     );
   }
@@ -99,16 +100,18 @@ public class DuckQuackTest extends TestNGCitrusSpringSupport {
   /**
    * Действие утки - крякать.
    * @param runner
+   * @param repetitionCount
+   * @param soundCount
    */
-  public void quackDuck(TestCaseRunner runner) {
+  public void quackDuck(TestCaseRunner runner, int repetitionCount, int soundCount) {
     runner.$(http().client("http://localhost:2222")
             .send()
             .get("/api/duck/action/quack")
             .message()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .queryParam("id", "${duckId}")
-            .queryParam("repetitionCount", "${repetitionCount}")
-            .queryParam("soundCount", "${soundCount}")
+            .queryParam("repetitionCount", String.valueOf(repetitionCount))
+            .queryParam("soundCount", String.valueOf(soundCount))
     );
   }
 
@@ -128,13 +131,12 @@ public class DuckQuackTest extends TestNGCitrusSpringSupport {
 
   /**
    * Генерация строки со звуком утки.
-   * @param context
+   * @param sound
+   * @param soundCount
+   * @param repetitionCount
    * @return
    */
-  public String getResponseSound (TestContext context) {
-    String sound = context.getVariable("sound");
-    int soundCount = Integer.parseInt(context.getVariable("soundCount"));
-    int repetitionCount = Integer.parseInt(context.getVariable("repetitionCount"));
+  public String getResponseSound (String sound, int soundCount, int repetitionCount) {
     String responseSound = (sound + "-").repeat(soundCount);
     responseSound = responseSound.substring(0, responseSound.length() - 1);
     responseSound = (responseSound + ", ").repeat(repetitionCount);
