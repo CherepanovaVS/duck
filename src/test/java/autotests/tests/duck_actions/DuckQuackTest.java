@@ -33,9 +33,9 @@ public class DuckQuackTest extends DuckActionsClient {
     quackDuck(runner, soundCount, repetitionCount);
 
     String responseSound = getResponseSound(sound, soundCount, repetitionCount);
-    validateOkResponse(runner, "{\n"
+    validateResponse(runner, "{\n"
             + "  \"sound\": \"" + responseSound + "\"\n"
-            + "}");
+            + "}", "OK");
   }
 
   @Test (description = "Проверка действия утки - крякать с четным id.")
@@ -62,8 +62,8 @@ public class DuckQuackTest extends DuckActionsClient {
     quackDuck(runner, soundCount, repetitionCount);
 
     String responseSound = getResponseSound(sound, soundCount, repetitionCount);
-    validateOkResponse(runner, "{\n"
+    validateResponse(runner, "{\n"
             + "  \"sound\": \"" + responseSound + "\"\n"
-            + "}");
+            + "}", "OK");
   }
 }

@@ -14,9 +14,9 @@ public class DuckUpdateTest extends DuckActionsClient {
     createDuck(runner, "yellow", 0.1, "rubber", "quack", "ACTIVE");
     getDuckId(runner);
     updateDuck(runner, "red", 5, "rubber", "quack");
-    validateOkResponse(runner, "{\n"
+    validateResponse(runner, "{\n"
             + "  \"message\": \"Duck with id = ${duckId} is updated\"\n"
-            + "}");
+            + "}", "OK");
   }
 
   @Test (description = "Проверка изменения у утки цвета и звука.")
@@ -25,8 +25,8 @@ public class DuckUpdateTest extends DuckActionsClient {
     createDuck(runner, "yellow", 0.1, "rubber", "quack", "ACTIVE");
     getDuckId(runner);
     updateDuck(runner, "green", 0.1, "rubber", "QUACK");
-    validateOkResponse(runner, "{\n"
+    validateResponse(runner, "{\n"
             + "  \"message\": \"Duck with id = ${duckId} is updated\"\n"
-            + "}");
+            + "}", "OK");
   }
 }

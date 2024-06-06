@@ -15,9 +15,9 @@ public class DuckSwimTest extends DuckActionsClient {
     createDuck(runner, "yellow", 0.1, "rubber", "quack", "ACTIVE");
     getDuckId(runner);
     swimDuck(runner, "${duckId}");
-    validateOkResponse(runner, "{\n"
+    validateResponse(runner, "{\n"
             + "  \"message\": \"I'm swimming\"\n"
-            + "}");
+            + "}", "OK");
   }
 
   @Test (description = "Проверка действия утки - плыть с несуществующим id.")
@@ -31,8 +31,8 @@ public class DuckSwimTest extends DuckActionsClient {
     context.setVariable("notExistDuckId", duckId + 100);
 
     swimDuck(runner, "${notExistDuckId}");
-    validateNotFoundResponse(runner, "{\n"
+    validateResponse(runner, "{\n"
             + "  \"message\": \"Duck with id = ${notExistDuckId} isn't found\"\n"
-            + "}");
+            + "}", "NOT_FOUND");
   }
 }

@@ -14,9 +14,9 @@ public class DuckFlyTest extends DuckActionsClient {
     createDuck(runner, "yellow", 0.1, "rubber", "quack", "ACTIVE");
     getDuckId(runner);
     flyDuck(runner);
-    validateOkResponse(runner, "{\n"
+    validateResponse(runner, "{\n"
             + "  \"message\": \"I'm flying\"\n"
-            + "}");
+            + "}", "OK");
   }
 
   @Test (description = "Проверка действия утки - лететь со связанными крыльями.")
@@ -25,9 +25,9 @@ public class DuckFlyTest extends DuckActionsClient {
     createDuck(runner, "yellow", 0.1, "rubber", "quack", "FIXED");
     getDuckId(runner);
     flyDuck(runner);
-    validateOkResponse(runner, "{\n"
+    validateResponse(runner, "{\n"
             + "  \"message\": \"I can't fly\"\n"
-            + "}");
+            + "}", "OK");
   }
 
   @Test (description = "Проверка действия утки - лететь с неопределенным состоянием крыльев.")
@@ -36,8 +36,8 @@ public class DuckFlyTest extends DuckActionsClient {
     createDuck(runner, "yellow", 0.1, "rubber", "quack", "UNDEFINED");
     getDuckId(runner);
     flyDuck(runner);
-    validateOkResponse(runner, "{\n"
+    validateResponse(runner, "{\n"
             + "  \"message\": \"Wings are not detected :(\"\n"
-            + "}");
+            + "}", "OK");
   }
 }

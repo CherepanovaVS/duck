@@ -48,24 +48,10 @@ public class DuckActionsClient extends TestNGCitrusSpringSupport {
    * @param runner
    * @param responseMessage
    */
-  public void validateOkResponse(TestCaseRunner runner, String responseMessage) {
+  public void validateResponse(TestCaseRunner runner, String responseMessage, String httpStatus) {
     runner.$(http().client(duckService)
             .receive()
-            .response(HttpStatus.OK)
-            .message()
-            .contentType(MediaType.APPLICATION_JSON_VALUE).body(responseMessage)
-    );
-  }
-
-  /**
-   * Валидация Not Found ответа.
-   * @param runner
-   * @param responseMessage
-   */
-  public void validateNotFoundResponse(TestCaseRunner runner, String responseMessage) {
-    runner.$(http().client(duckService)
-            .receive()
-            .response(HttpStatus.NOT_FOUND)
+            .response(HttpStatus.valueOf(httpStatus))
             .message()
             .contentType(MediaType.APPLICATION_JSON_VALUE).body(responseMessage)
     );

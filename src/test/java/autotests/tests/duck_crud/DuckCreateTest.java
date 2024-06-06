@@ -17,14 +17,14 @@ public class DuckCreateTest extends DuckActionsClient {
     String sound = "quack";
     String wingsState = "ACTIVE";
     createDuck(runner, color, height, material, sound, wingsState);
-    validateOkResponse(runner, "{\n"
+    validateResponse(runner, "{\n"
             + "  \"color\": \"" + color + "\",\n"
             + "  \"height\": " + height + ",\n"
             + "  \"id\": \"@isNumber()@\",\n"
             + "  \"material\": \"" + material + "\",\n"
             + "  \"sound\": \"" + sound + "\",\n"
             + "  \"wingsState\": \"" + wingsState + "\"\n"
-            + "}");
+            + "}", "OK");
   }
 
   @Test (description = "Проверка создания утки с material = wood.")
@@ -36,13 +36,13 @@ public class DuckCreateTest extends DuckActionsClient {
     String sound = "quack";
     String wingsState = "ACTIVE";
     createDuck(runner, color, height, material, sound, wingsState);
-    validateOkResponse(runner, "{\n"
+    validateResponse(runner, "{\n"
             + "  \"color\": \"" + color + "\",\n"
             + "  \"height\": " + height + ",\n"
             + "  \"id\": \"@isNumber()@\",\n"
             + "  \"material\": \"" + material + "\",\n"
             + "  \"sound\": \"" + sound + "\",\n"
             + "  \"wingsState\": \"" + wingsState + "\"\n"
-            + "}");
+            + "}", "OK");
   }
 }
