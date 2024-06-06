@@ -27,7 +27,7 @@ public class DuckSwimTest extends DuckActionsClient {
     createDuck(runner, "yellow", 0.1, "rubber", "quack", "FIXED");
     getDuckId(runner);
 
-    Long duckId = Long.valueOf(context.getVariable("duckId"));
+    int duckId = Integer.parseInt(context.getVariable("duckId"));
     context.setVariable("notExistDuckId", duckId + 100);
 
     swimDuck(runner, "${notExistDuckId}");

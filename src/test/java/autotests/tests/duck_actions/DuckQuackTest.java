@@ -23,7 +23,7 @@ public class DuckQuackTest extends DuckActionsClient {
     createDuck(runner, color, height, material, sound, wingsState);
     getDuckId(runner);
 
-    Long duckId = Long.valueOf(context.getVariable("duckId"));
+    int duckId = Integer.parseInt(context.getVariable("duckId"));
     // Если id четный, создадим ещё одну утку, чтобы у неё был нечетный id.
     if (duckId % 2 == 0) {
       createDuck(runner, color, height, material, sound, wingsState);
@@ -52,7 +52,7 @@ public class DuckQuackTest extends DuckActionsClient {
     createDuck(runner, color, height, material, sound, wingsState);
     getDuckId(runner);
 
-    Long duckId = Long.valueOf(context.getVariable("duckId"));
+    int duckId = Integer.parseInt(context.getVariable("duckId"));
     // Если id нечетный, создадим ещё одну утку, чтобы у неё был четный id.
     if (duckId % 2 != 0) {
       createDuck(runner, color, height, material, sound, wingsState);

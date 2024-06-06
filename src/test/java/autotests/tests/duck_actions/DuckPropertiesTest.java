@@ -21,7 +21,7 @@ public class DuckPropertiesTest extends DuckActionsClient {
     createDuck(runner, color, height, material, sound, wingsState);
     getDuckId(runner);
 
-    Long duckId = Long.valueOf(context.getVariable("duckId"));
+    int duckId = Integer.parseInt(context.getVariable("duckId"));
     if (duckId % 2 == 0) {
       createDuck(runner, color, height, material, sound, wingsState);
       getDuckId(runner);
@@ -49,7 +49,7 @@ public class DuckPropertiesTest extends DuckActionsClient {
     createDuck(runner, color, height, material, sound, wingsState);
     getDuckId(runner);
 
-    Long duckId = Long.valueOf(context.getVariable("duckId"));
+    int duckId = Integer.parseInt(context.getVariable("duckId"));
     if (duckId % 2 != 0) {
       createDuck(runner, color, height, material, sound, wingsState);
       getDuckId(runner);
