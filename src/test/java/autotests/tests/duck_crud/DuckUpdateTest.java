@@ -13,7 +13,7 @@ public class DuckUpdateTest extends DuckActionsClient {
   public void successfulUpdateColorAndHeight(@Optional @CitrusResource TestCaseRunner runner) {
     createDuck(runner, "yellow", 0.1, "rubber", "quack", "ACTIVE");
     getDuckId(runner);
-    updateDuck(runner, "red", 5, "rubber", "quack");
+    updateDuck(runner, "red", "5", "rubber", "quack");
     validateResponse(runner, "{\n"
             + "  \"message\": \"Duck with id = ${duckId} is updated\"\n"
             + "}", "OK");
@@ -24,7 +24,7 @@ public class DuckUpdateTest extends DuckActionsClient {
   public void successfulUpdateColorAndSound(@Optional @CitrusResource TestCaseRunner runner) {
     createDuck(runner, "yellow", 0.1, "rubber", "quack", "ACTIVE");
     getDuckId(runner);
-    updateDuck(runner, "green", 0.1, "rubber", "QUACK");
+    updateDuck(runner, "green", "0.1", "rubber", "QUACK");
     validateResponse(runner, "{\n"
             + "  \"message\": \"Duck with id = ${duckId} is updated\"\n"
             + "}", "OK");

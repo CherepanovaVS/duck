@@ -118,15 +118,15 @@ public class DuckActionsClient extends TestNGCitrusSpringSupport {
    * @param repetitionCount
    * @param soundCount
    */
-  public void quackDuck(TestCaseRunner runner, int repetitionCount, int soundCount) {
+  public void quackDuck(TestCaseRunner runner, String repetitionCount, String soundCount) {
     runner.$(http().client(duckService)
             .send()
             .get("/api/duck/action/quack")
             .message()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .queryParam("id", "${duckId}")
-            .queryParam("repetitionCount", String.valueOf(repetitionCount))
-            .queryParam("soundCount", String.valueOf(soundCount))
+            .queryParam("repetitionCount", repetitionCount)
+            .queryParam("soundCount", soundCount)
     );
   }
 
@@ -134,13 +134,13 @@ public class DuckActionsClient extends TestNGCitrusSpringSupport {
    * Действие утки - плыть.
    * @param runner
    */
-  public void swimDuck(TestCaseRunner runner, String query) {
+  public void swimDuck(TestCaseRunner runner, String id) {
     runner.$(http().client(duckService)
             .send()
             .get("/api/duck/action/swim")
             .message()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .queryParam("id", query)
+            .queryParam("id", id)
     );
   }
 
@@ -152,14 +152,14 @@ public class DuckActionsClient extends TestNGCitrusSpringSupport {
    * @param material
    * @param sound
    */
-  public void updateDuck(TestCaseRunner runner, String color, double height, String material, String sound) {
+  public void updateDuck(TestCaseRunner runner, String color, String height, String material, String sound) {
     runner.$(http().client(duckService)
             .send()
             .put("/api/duck/update")
             .message()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .queryParam("color", color)
-            .queryParam("height", String.valueOf(height))
+            .queryParam("height", height)
             .queryParam("id", "${duckId}")
             .queryParam("material", material)
             .queryParam("sound", sound)

@@ -30,7 +30,7 @@ public class DuckQuackTest extends DuckActionsClient {
       getDuckId(runner);
     }
 
-    quackDuck(runner, soundCount, repetitionCount);
+    quackDuck(runner, String.valueOf(soundCount), String.valueOf(repetitionCount));
 
     String responseSound = getResponseSound(sound, soundCount, repetitionCount);
     validateResponse(runner, "{\n"
@@ -59,7 +59,7 @@ public class DuckQuackTest extends DuckActionsClient {
       getDuckId(runner);
     }
 
-    quackDuck(runner, soundCount, repetitionCount);
+    quackDuck(runner, String.valueOf(soundCount), String.valueOf(repetitionCount));
 
     String responseSound = getResponseSound(sound, soundCount, repetitionCount);
     validateResponse(runner, "{\n"
