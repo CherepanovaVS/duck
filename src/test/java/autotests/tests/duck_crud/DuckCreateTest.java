@@ -44,14 +44,13 @@ public class DuckCreateTest extends DuckActionsClient {
             .sound("quack")
             .wingsState(WingsState.ACTIVE);
     createDuck(runner, duckProperties);
-    getDuckId(runner);
-    Duck duck = new Duck()
-            .color(duckProperties.color())
-            .height(duckProperties.height())
-            .id(Integer.parseInt(context.getVariable("duckId")))
-            .material(duckProperties.material())
-            .sound(duckProperties.sound())
-            .wingsState(duckProperties.wingsState());
-    validateResponseUsingPayloads(runner, duck, HttpStatus.OK);
+    validateResponseUsingString(runner, "{\n"
+            + "  \"color\": \"" + duckProperties.color() + "\",\n"
+            + "  \"height\": " + duckProperties.height() + ",\n"
+            + "  \"id\": \"@isNumber()@\",\n"
+            + "  \"material\": \"" + duckProperties.material() + "\",\n"
+            + "  \"sound\": \"" + duckProperties.sound() + "\",\n"
+            + "  \"wingsState\": \"" + duckProperties.wingsState() + "\"\n"
+            + "}", HttpStatus.OK);
   }
 }
