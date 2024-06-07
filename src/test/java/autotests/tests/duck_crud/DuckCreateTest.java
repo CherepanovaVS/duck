@@ -35,8 +35,7 @@ public class DuckCreateTest extends DuckActionsClient {
 
   @Test (description = "Проверка создания утки с material = wood.")
   @CitrusTest
-  public void successfulCreateMaterialWood(@Optional @CitrusResource TestCaseRunner runner,
-                                           @Optional @CitrusResource TestContext context) {
+  public void successfulCreateMaterialWood(@Optional @CitrusResource TestCaseRunner runner) {
     DuckProperties duckProperties = new DuckProperties()
             .color("yellow")
             .height(0.1)
