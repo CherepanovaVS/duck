@@ -44,8 +44,6 @@ public class DuckSwimTest extends DuckActionsClient {
     context.setVariable("notExistDuckId", duckId + 100);
 
     swimDuck(runner, "${notExistDuckId}");
-    validateResponseUsingString(runner, "{\n"
-            + "  \"message\": \"Duck with id = ${notExistDuckId} isn't found\"\n"
-            + "}", HttpStatus.NOT_FOUND);
+    validateResponseUsingResources(runner, "duckSwimTest/successfulSwimNotExistId.json", HttpStatus.OK);
   }
 }

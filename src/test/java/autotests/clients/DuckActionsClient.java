@@ -67,7 +67,6 @@ public class DuckActionsClient extends TestNGCitrusSpringSupport {
             .message()
             .type(MessageType.JSON)
             .body(new ObjectMappingPayloadBuilder(expectedPayload, new ObjectMapper()))
-            .validate()
     );
   }
 
@@ -138,7 +137,7 @@ public class DuckActionsClient extends TestNGCitrusSpringSupport {
     );
   }
 
-  @Description("зменение параметров утки.")
+  @Description("Изменение параметров утки.")
   public void updateDuck(TestCaseRunner runner, String color, String height, String material, String sound) {
     runner.$(http().client(duckService)
             .send()
