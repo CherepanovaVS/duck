@@ -1,10 +1,13 @@
 package autotests.tests.duck_actions;
 
 import autotests.clients.DuckActionsClient;
+import autotests.payloads.DuckProperties;
+import autotests.payloads.WingsState;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.context.TestContext;
+import org.springframework.http.HttpStatus;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Test;
 
@@ -13,55 +16,45 @@ public class DuckPropertiesTest extends DuckActionsClient {
   @CitrusTest
   public void successfulGetPropertiesNotEvenId(@Optional @CitrusResource TestCaseRunner runner,
                                                @Optional @CitrusResource TestContext context) {
-    String color = "yellow";
-    double height = 0.1;
-    String material = "rubber";
-    String sound = "quack";
-    String wingsState = "ACTIVE";
-    createDuck(runner, color, height, material, sound, wingsState);
+    DuckProperties duckProperties = new DuckProperties()
+            .color("yellow")
+            .height(0.1)
+            .material("rubber")
+            .sound("quack")
+            .wingsState(WingsState.ACTIVE);
+    createDuck(runner, duckProperties);
     getDuckId(runner);
 
     int duckId = Integer.parseInt(context.getVariable("duckId"));
     if (duckId % 2 == 0) {
-      createDuck(runner, color, height, material, sound, wingsState);
+      createDuck(runner, duckProperties);
       getDuckId(runner);
     }
 
     getPropertiesDuck(runner);
-    validateResponse(runner, "{\n"
-            + "  \"color\": \"" + color + "\",\n"
-            + "  \"height\": " + height + ",\n"
-            + "  \"material\": \"" + material + "\",\n"
-            + "  \"sound\": \"" + sound + "\",\n"
-            + "  \"wingsState\": \"" + wingsState + "\"\n"
-            + "}", "OK");
+    validateResponseUsingPayloads(runner, duckProperties, HttpStatus.OK);
   }
 
   @Test (description = "Проверка характеристик утки с четным id, material = wood.")
   @CitrusTest
   public void successfulGetPropertiesEvenId(@Optional @CitrusResource TestCaseRunner runner,
                                             @Optional @CitrusResource TestContext context) {
-    String color = "yellow";
-    double height = 0.1;
-    String material = "wood";
-    String sound = "quack";
-    String wingsState = "ACTIVE";
-    createDuck(runner, color, height, material, sound, wingsState);
+    DuckProperties duckProperties = new DuckProperties()
+            .color("yellow")
+            .height(0.1)
+            .material("wood")
+            .sound("quack")
+            .wingsState(WingsState.ACTIVE);
+    createDuck(runner, duckProperties);
     getDuckId(runner);
 
     int duckId = Integer.parseInt(context.getVariable("duckId"));
     if (duckId % 2 != 0) {
-      createDuck(runner, color, height, material, sound, wingsState);
+      createDuck(runner, duckProperties);
       getDuckId(runner);
     }
 
     getPropertiesDuck(runner);
-    validateResponse(runner, "{\n"
-            + "  \"color\": \"" + color + "\",\n"
-            + "  \"height\": " + height + ",\n"
-            + "  \"material\": \"" + material + "\",\n"
-            + "  \"sound\": \"" + sound + "\",\n"
-            + "  \"wingsState\": \"" + wingsState + "\"\n"
-            + "}", "OK");
+    validateResponseUsingPayloads(runner, duckProperties, HttpStatus.OK);
   }
 }
