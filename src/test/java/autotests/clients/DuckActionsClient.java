@@ -16,6 +16,8 @@ import org.springframework.http.MediaType;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.test.context.ContextConfiguration;
 
+import static com.consol.citrus.actions.ExecuteSQLAction.Builder.sql;
+import static com.consol.citrus.actions.ExecuteSQLQueryAction.Builder.query;
 import static com.consol.citrus.http.actions.HttpActionBuilder.http;
 import static com.consol.citrus.validation.DelegatingPayloadVariableExtractor.Builder.fromBody;
 
@@ -74,6 +76,41 @@ public class DuckActionsClient extends TestNGCitrusSpringSupport {
             .type(MessageType.JSON)
             .body(new ObjectMappingPayloadBuilder(expectedPayload, new ObjectMapper()))
     );
+  }
+
+  @Step("Валидация параметров уточки в БД.")
+  public void validateDuckInDatabase(TestCaseRunner runner, String id, String color, String height, String material,
+                                        String sound, String wingsState) {
+    runner.$(query(db)
+            .statement("SELECT * FROM DUCK WHERE ID =" + id)
+            .validate("COLOR", color)
+            .validate("HEIGHT", height)
+            .validate("MATERIAL", material)
+            .validate("SOUND", sound)
+            .validate("WINGS_STATE", wingsState)
+    );
+  }
+
+  @Step("Проверка удаленной уточки в БД.")
+  public void validateDeletedDuckInDatabase(TestCaseRunner runner, String id) {
+    runner.$(query(db)
+            .statement("SELECT COUNT(ID) \"Count\" FROM DUCK WHERE ID =" + id)
+            .validate("Count", "0")
+    );
+  }
+
+  @Step("Создание уточки в БД.")
+  protected void createDuckInDatabase(TestCaseRunner runner, String color, String height, String material,
+                                      String sound, String wingsState) {
+    runner.$(sql(db)
+            .statement("INSERT INTO DUCK (ID, COLOR, HEIGHT, MATERIAL, SOUND, WINGS_STATE)\n" +
+                    "VALUES (${duckId}, '" + color + "', " + height + ", '" + material + "', '" + sound + "', '" + wingsState + "');"));
+  }
+
+  @Step("Удаление уточки в БД.")
+  protected void deleteDuckInDatabase(TestCaseRunner runner) {
+    runner.$(sql(db)
+            .statement("DELETE FROM DUCK WHERE ID=${duckId}"));
   }
 
   @Step("Сохранение id созданной утки.")
