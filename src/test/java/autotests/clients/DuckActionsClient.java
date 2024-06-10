@@ -7,6 +7,7 @@ import com.consol.citrus.message.MessageType;
 import com.consol.citrus.message.builder.ObjectMappingPayloadBuilder;
 import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.qameta.allure.Step;
 import jdk.jfr.Description;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -24,6 +25,7 @@ public class DuckActionsClient extends TestNGCitrusSpringSupport {
   protected HttpClient duckService;
 
   @Description("Создание утки.")
+  @Step("Эндпоинт - Создать уточку.")
   public void createDuck(TestCaseRunner runner, Object body) {
     runner.$(http().client(duckService)
             .send()
@@ -34,7 +36,7 @@ public class DuckActionsClient extends TestNGCitrusSpringSupport {
     );
   }
 
-  @Description("Валидация ответа с помощью String.")
+  @Step("Валидация ответа с помощью String.")
   public void validateResponseUsingString(TestCaseRunner runner, String responseMessage, HttpStatus httpStatus) {
     runner.$(http()
             .client(duckService)
@@ -46,7 +48,7 @@ public class DuckActionsClient extends TestNGCitrusSpringSupport {
     );
   }
 
-  @Description("Валидация ответа с помощью Resources.")
+  @Step("Валидация ответа с помощью Resources.")
   public void validateResponseUsingResources(TestCaseRunner runner, String expectedResource, HttpStatus httpStatus) {
     runner.$(http()
             .client(duckService)
@@ -58,7 +60,7 @@ public class DuckActionsClient extends TestNGCitrusSpringSupport {
     );
   }
 
-  @Description("Валидация ответа с помощью Payloads.")
+  @Step("Валидация ответа с помощью Payloads.")
   public void validateResponseUsingPayloads(TestCaseRunner runner, Object expectedPayload, HttpStatus httpStatus) {
     runner.$(http()
             .client(duckService)
@@ -70,7 +72,7 @@ public class DuckActionsClient extends TestNGCitrusSpringSupport {
     );
   }
 
-  @Description("Сохранение id созданной утки.")
+  @Step("Сохранение id созданной утки.")
   public void getDuckId(TestCaseRunner runner) {
     runner.$(http().client(duckService)
             .receive()
@@ -81,6 +83,7 @@ public class DuckActionsClient extends TestNGCitrusSpringSupport {
   }
 
   @Description("Удаление утки.")
+  @Step("Эндпоинт - Удалить уточку.")
   public void deleteDuck(TestCaseRunner runner) {
     runner.$(http().client(duckService)
             .send()
@@ -92,6 +95,7 @@ public class DuckActionsClient extends TestNGCitrusSpringSupport {
   }
 
   @Description("Действие утки - лететь.")
+  @Step("Эндпоинт - Лететь.")
   public void flyDuck(TestCaseRunner runner) {
     runner.$(http().client(duckService)
             .send()
@@ -103,6 +107,7 @@ public class DuckActionsClient extends TestNGCitrusSpringSupport {
   }
 
   @Description("Получение характеристик утки.")
+  @Step("Эндпоинт - Показать характеристики.")
   public void getPropertiesDuck(TestCaseRunner runner) {
     runner.$(http().client(duckService)
             .send()
@@ -114,6 +119,7 @@ public class DuckActionsClient extends TestNGCitrusSpringSupport {
   }
 
   @Description("Действие утки - крякать.")
+  @Step("Эндпоинт - Крякать.")
   public void quackDuck(TestCaseRunner runner, String repetitionCount, String soundCount) {
     runner.$(http().client(duckService)
             .send()
@@ -127,6 +133,7 @@ public class DuckActionsClient extends TestNGCitrusSpringSupport {
   }
 
   @Description("Действие утки - плыть.")
+  @Step("Эндпоинт - Плыть.")
   public void swimDuck(TestCaseRunner runner, String id) {
     runner.$(http().client(duckService)
             .send()
@@ -138,6 +145,7 @@ public class DuckActionsClient extends TestNGCitrusSpringSupport {
   }
 
   @Description("Изменение параметров утки.")
+  @Step("Эндпоинт - Обновить харктеристики уточки.")
   public void updateDuck(TestCaseRunner runner, String color, String height, String material, String sound) {
     runner.$(http().client(duckService)
             .send()
@@ -152,7 +160,7 @@ public class DuckActionsClient extends TestNGCitrusSpringSupport {
     );
   }
 
-  @Description("Генерация строки со звуком утки.")
+  @Step("Генерация строки со звуком утки.")
   public String getResponseSound (String sound, int soundCount, int repetitionCount) {
     String responseSound = (sound + "-").repeat(soundCount);
     responseSound = responseSound.substring(0, responseSound.length() - 1);
