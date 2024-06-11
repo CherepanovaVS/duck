@@ -51,6 +51,7 @@ public class DuckActionsClient extends TestNGCitrusSpringSupport {
             .message()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(responseMessage)
+            .extract(fromBody().expression("$.id", "duckId"))
     );
   }
 

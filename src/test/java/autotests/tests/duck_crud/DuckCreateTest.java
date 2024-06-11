@@ -27,7 +27,14 @@ public class DuckCreateTest extends DuckActionsClient {
             .sound("quack")
             .wingsState(WingsState.ACTIVE);
     createDuck(runner, duck);
-    getDuckId(runner);
+    validateResponseUsingString(runner, "{\n"
+            + "  \"color\": \"" + duck.color() + "\",\n"
+            + "  \"height\": " + duck.height() + ",\n"
+            + "  \"id\": \"@isNumber()@\",\n"
+            + "  \"material\": \"" + duck.material() + "\",\n"
+            + "  \"sound\": \"" + duck.sound() + "\",\n"
+            + "  \"wingsState\": \"" + duck.wingsState() + "\"\n"
+            + "}", HttpStatus.OK);
     runner.$(doFinally().actions(context->deleteDuckInDatabase(runner)));
     validateDuckInDatabase(runner, "${duckId}", duck.color(), String.valueOf(duck.height()), duck.material(),
             duck.sound(), String.valueOf(duck.wingsState()));
@@ -51,5 +58,8 @@ public class DuckCreateTest extends DuckActionsClient {
             + "  \"sound\": \"" + duck.sound() + "\",\n"
             + "  \"wingsState\": \"" + duck.wingsState() + "\"\n"
             + "}", HttpStatus.OK);
+    runner.$(doFinally().actions(context->deleteDuckInDatabase(runner)));
+    validateDuckInDatabase(runner, "${duckId}", duck.color(), String.valueOf(duck.height()), duck.material(),
+            duck.sound(), String.valueOf(duck.wingsState()));
   }
 }
