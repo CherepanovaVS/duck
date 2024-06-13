@@ -66,7 +66,7 @@ public class BaseTest extends TestNGCitrusSpringSupport {
     );
   }
 
-  @Description("Получить ответ.")
+  @Description("Получить ответ, использую для валидации Resource.")
   protected void receiveResponseResourceBody(TestCaseRunner runner, HttpClient url, HttpStatus httpStatus,
                                              ClassPathResource body) {
     runner.$(http()
@@ -79,7 +79,7 @@ public class BaseTest extends TestNGCitrusSpringSupport {
     );
   }
 
-  @Description("Получить ответ.")
+  @Description("Получить ответ, использую для валидации Payload.")
   protected void receiveResponsePayloadBody(TestCaseRunner runner, HttpClient url, HttpStatus httpStatus,
                                             ObjectMappingPayloadBuilder body) {
     runner.$(http()
@@ -93,7 +93,7 @@ public class BaseTest extends TestNGCitrusSpringSupport {
   }
 
   @Description("Получить ответ и записать данные в переменную")
-  protected void receiveResponseWithExtractVariable(TestCaseRunner runner, HttpClient url, HttpStatus httpStatus,
+  protected void receiveResponseAndExtractVariable(TestCaseRunner runner, HttpClient url, HttpStatus httpStatus,
                                                     String responseMessage, String variableValue, String variableName) {
     runner.$(http()
             .client(url)
@@ -103,6 +103,18 @@ public class BaseTest extends TestNGCitrusSpringSupport {
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(responseMessage)
             .extract(fromBody().expression(variableValue, variableName))
+    );
+  }
+
+  @Description("Получить ответ.")
+  protected void receiveResponse(TestCaseRunner runner, HttpClient url, HttpStatus httpStatus, String responseMessage) {
+    runner.$(http()
+            .client(url)
+            .receive()
+            .response(httpStatus)
+            .message()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(responseMessage)
     );
   }
 

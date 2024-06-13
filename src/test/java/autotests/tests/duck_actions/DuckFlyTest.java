@@ -18,7 +18,7 @@ public class DuckFlyTest extends DuckActionsClient {
   @Test (description = "Проверка действия утки - лететь с активными крыльями.")
   @CitrusTest
   public void successfulFlyActiveWings(@Optional @CitrusResource TestCaseRunner runner) {
-    runner.variable("duckId", 700);
+    runner.variable("duckId", 703);
     runner.$(doFinally().actions(context->deleteDuckInDatabase(runner)));
     createDuckInDatabase(runner, "yellow", "0.1", "rubber", "quack", "ACTIVE");
     flyDuck(runner);
@@ -28,7 +28,7 @@ public class DuckFlyTest extends DuckActionsClient {
   @Test (description = "Проверка действия утки - лететь со связанными крыльями.")
   @CitrusTest
   public void successfulFlyFixedWings(@Optional @CitrusResource TestCaseRunner runner) {
-    runner.variable("duckId", 700);
+    runner.variable("duckId", 704);
     runner.$(doFinally().actions(context->deleteDuckInDatabase(runner)));
     createDuckInDatabase(runner, "yellow", "0.1", "rubber", "quack", "FIXED");
     flyDuck(runner);
@@ -38,7 +38,7 @@ public class DuckFlyTest extends DuckActionsClient {
   @Test (description = "Проверка действия утки - лететь с неопределенным состоянием крыльев.")
   @CitrusTest
   public void successfulFlyUndefinedWings(@Optional @CitrusResource TestCaseRunner runner) {
-    runner.variable("duckId", 700);
+    runner.variable("duckId", 705);
     runner.$(doFinally().actions(context->deleteDuckInDatabase(runner)));
     createDuckInDatabase(runner, "yellow", "0.1", "rubber", "quack", "UNDEFINED");
     flyDuck(runner);

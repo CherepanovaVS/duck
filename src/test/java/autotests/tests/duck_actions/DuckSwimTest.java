@@ -18,7 +18,7 @@ public class DuckSwimTest extends DuckActionsClient {
   @Test (description = "Проверка действия утки - плыть с существующим id.")
   @CitrusTest
   public void successfulSwimExistId(@Optional @CitrusResource TestCaseRunner runner) {
-    runner.variable("duckId", 700);
+    runner.variable("duckId", 710);
     runner.$(doFinally().actions(context->deleteDuckInDatabase(runner)));
     createDuckInDatabase(runner, "yellow", "0.1", "rubber", "quack", "ACTIVE");
     swimDuck(runner, "${duckId}");
@@ -28,7 +28,7 @@ public class DuckSwimTest extends DuckActionsClient {
   @Test (description = "Проверка действия утки - плыть с несуществующим id.")
   @CitrusTest
   public void successfulSwimNotExistId(@Optional @CitrusResource TestCaseRunner runner) {
-    runner.variable("duckId", 700);
+    runner.variable("duckId", 711);
     runner.$(doFinally().actions(context->deleteDuckInDatabase(runner)));
     createDuckInDatabase(runner, "yellow", "0.1", "rubber", "quack", "ACTIVE");
     runner.variable("notExistDuckId", 800);

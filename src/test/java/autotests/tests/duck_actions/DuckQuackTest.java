@@ -20,7 +20,7 @@ public class DuckQuackTest extends DuckActionsClient {
   public void successfulQuackNotEvenId(@Optional @CitrusResource TestCaseRunner runner) {
     int soundCount = 2;
     int repetitionCount = 3;
-    runner.variable("duckId", 701);
+    runner.variable("duckId", 709);
     runner.$(doFinally().actions(context->deleteDuckInDatabase(runner)));
     createDuckInDatabase(runner, "yellow", "0.1", "rubber", "quack", "ACTIVE");
     quackDuck(runner, String.valueOf(soundCount), String.valueOf(repetitionCount));
@@ -33,7 +33,7 @@ public class DuckQuackTest extends DuckActionsClient {
   public void successfulQuackEvenId(@Optional @CitrusResource TestCaseRunner runner) {
     int soundCount = 2;
     int repetitionCount = 3;
-    runner.variable("duckId", 700);
+    runner.variable("duckId", 708);
     runner.$(doFinally().actions(context->deleteDuckInDatabase(runner)));
     createDuckInDatabase(runner, "yellow", "0.1", "rubber", "quack", "ACTIVE");
     quackDuck(runner, String.valueOf(soundCount), String.valueOf(repetitionCount));

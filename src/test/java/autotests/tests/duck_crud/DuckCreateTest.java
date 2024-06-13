@@ -78,7 +78,7 @@ public class DuckCreateTest extends DuckActionsClient {
   public void successfulCreate(Object payload, String response, HttpStatus status,
                                @Optional @CitrusResource TestCaseRunner runner) {
     createDuck(runner, payload);
-    validateResponseUsingString(runner, response, status);
+    validateResponseUsingStringAndExtractVariable(runner, response, status);
     runner.$(doFinally().actions(context->deleteDuckInDatabase(runner)));
   }
 
@@ -92,7 +92,7 @@ public class DuckCreateTest extends DuckActionsClient {
             .sound("quack")
             .wingsState(WingsState.ACTIVE);
     createDuck(runner, duck);
-    validateResponseUsingString(runner, "{\n"
+    validateResponseUsingStringAndExtractVariable(runner, "{\n"
             + "  \"color\": \"" + duck.color() + "\",\n"
             + "  \"height\": " + duck.height() + ",\n"
             + "  \"id\": \"@isNumber()@\",\n"
@@ -115,7 +115,7 @@ public class DuckCreateTest extends DuckActionsClient {
             .sound("quack")
             .wingsState(WingsState.ACTIVE);
     createDuck(runner, duck);
-    validateResponseUsingString(runner, "{\n"
+    validateResponseUsingStringAndExtractVariable(runner, "{\n"
             + "  \"color\": \"" + duck.color() + "\",\n"
             + "  \"height\": " + duck.height() + ",\n"
             + "  \"id\": \"@isNumber()@\",\n"

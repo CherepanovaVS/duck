@@ -37,7 +37,15 @@ public class DuckActionsClient extends BaseTest {
 
   @Step("Валидация ответа с помощью String.")
   public void validateResponseUsingString(TestCaseRunner runner, String responseMessage, HttpStatus httpStatus) {
-    receiveResponseWithExtractVariable(runner,
+    receiveResponse(runner,
+            duckService,
+            httpStatus,
+            responseMessage);
+  }
+
+  @Step("Валидация ответа с помощью String.")
+  public void validateResponseUsingStringAndExtractVariable(TestCaseRunner runner, String responseMessage, HttpStatus httpStatus) {
+    receiveResponseAndExtractVariable(runner,
             duckService,
             httpStatus,
             responseMessage,
