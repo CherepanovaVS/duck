@@ -6,9 +6,11 @@ import autotests.payloads.WingsState;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.testng.CitrusParameters;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import org.springframework.http.HttpStatus;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Test;
 
@@ -17,6 +19,69 @@ import static com.consol.citrus.container.FinallySequence.Builder.doFinally;
 @Epic("Тесты для duck-controller (crud).")
 @Feature("Эндпоинт /api/duck/create")
 public class DuckCreateTest extends DuckActionsClient {
+
+  Duck duck1 = new Duck().color("yellow").height(0.1).material("rubber").sound("quack").wingsState(WingsState.ACTIVE);
+  Duck duck2 = new Duck().color("yellow").height(5).material("rubber").sound("quack").wingsState(WingsState.ACTIVE);
+  Duck duck3 = new Duck().color("yellow").height(10).material("rubber").sound("quack").wingsState(WingsState.ACTIVE);
+  Duck duck4 = new Duck().color("yellow").height(0.1).material("rubber").sound("QUACK").wingsState(WingsState.ACTIVE);
+  Duck duck5 = new Duck().color("yellow").height(0.1).material("rubber").sound("quack").wingsState(WingsState.FIXED);
+
+  @DataProvider(name = "duckList")
+  public Object[][] DuckProvider() {
+    return new Object[][]{
+            {duck1, "{\n"
+                    + "  \"color\": \"" + duck1.color() + "\",\n"
+                    + "  \"height\": " + duck1.height() + ",\n"
+                    + "  \"id\": \"@isNumber()@\",\n"
+                    + "  \"material\": \"" + duck1.material() + "\",\n"
+                    + "  \"sound\": \"" + duck1.sound() + "\",\n"
+                    + "  \"wingsState\": \"" + duck1.wingsState() + "\"\n"
+                    + "}", HttpStatus.OK, null},
+            {duck2, "{\n"
+                    + "  \"color\": \"" + duck2.color() + "\",\n"
+                    + "  \"height\": " + duck2.height() + ",\n"
+                    + "  \"id\": \"@isNumber()@\",\n"
+                    + "  \"material\": \"" + duck2.material() + "\",\n"
+                    + "  \"sound\": \"" + duck2.sound() + "\",\n"
+                    + "  \"wingsState\": \"" + duck2.wingsState() + "\"\n"
+                    + "}", HttpStatus.OK, null},
+            {duck3, "{\n"
+                    + "  \"color\": \"" + duck3.color() + "\",\n"
+                    + "  \"height\": " + duck3.height() + ",\n"
+                    + "  \"id\": \"@isNumber()@\",\n"
+                    + "  \"material\": \"" + duck3.material() + "\",\n"
+                    + "  \"sound\": \"" + duck3.sound() + "\",\n"
+                    + "  \"wingsState\": \"" + duck3.wingsState() + "\"\n"
+                    + "}", HttpStatus.OK, null},
+            {duck4, "{\n"
+                    + "  \"color\": \"" + duck4.color() + "\",\n"
+                    + "  \"height\": " + duck4.height() + ",\n"
+                    + "  \"id\": \"@isNumber()@\",\n"
+                    + "  \"material\": \"" + duck4.material() + "\",\n"
+                    + "  \"sound\": \"" + duck4.sound() + "\",\n"
+                    + "  \"wingsState\": \"" + duck4.wingsState() + "\"\n"
+                    + "}", HttpStatus.OK, null},
+            {duck5, "{\n"
+                    + "  \"color\": \"" + duck5.color() + "\",\n"
+                    + "  \"height\": " + duck5.height() + ",\n"
+                    + "  \"id\": \"@isNumber()@\",\n"
+                    + "  \"material\": \"" + duck5.material() + "\",\n"
+                    + "  \"sound\": \"" + duck5.sound() + "\",\n"
+                    + "  \"wingsState\": \"" + duck5.wingsState() + "\"\n"
+                    + "}", HttpStatus.OK, null},
+    };
+  }
+
+  @Test(description = "Проверка создания утки.", dataProvider = "duckList")
+  @CitrusTest
+  @CitrusParameters({"payload", "response", "status", "runner"})
+  public void successfulCreate(Object payload, String response, HttpStatus status,
+                               @Optional @CitrusResource TestCaseRunner runner) {
+    createDuck(runner, payload);
+    validateResponseUsingString(runner, response, status);
+    runner.$(doFinally().actions(context->deleteDuckInDatabase(runner)));
+  }
+
   @Test (description = "Проверка создания утки с material = rubber.")
   @CitrusTest
   public void successfulCreateMaterialRubber(@Optional @CitrusResource TestCaseRunner runner) {
