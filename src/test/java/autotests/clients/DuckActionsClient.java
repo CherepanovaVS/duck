@@ -1,30 +1,15 @@
 package autotests.clients;
 
 import autotests.BaseTest;
-import autotests.EndpointConfig;
 import com.consol.citrus.TestCaseRunner;
-import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.message.builder.ObjectMappingPayloadBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.qameta.allure.Step;
 import jdk.jfr.Description;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
-import org.springframework.jdbc.datasource.SingleConnectionDataSource;
-import org.springframework.test.context.ContextConfiguration;
 
-import static com.consol.citrus.actions.ExecuteSQLAction.Builder.sql;
-import static com.consol.citrus.actions.ExecuteSQLQueryAction.Builder.query;
-
-@ContextConfiguration(classes = {EndpointConfig.class})
 public class DuckActionsClient extends BaseTest {
-
-  @Autowired
-  protected HttpClient duckService;
-
-  @Autowired
-  protected SingleConnectionDataSource db;
 
   @Description("Создание утки.")
   @Step("Эндпоинт - Создать уточку.")
@@ -72,36 +57,27 @@ public class DuckActionsClient extends BaseTest {
   @Step("Валидация параметров уточки в БД.")
   public void validateDuckInDatabase(TestCaseRunner runner, String id, String color, String height, String material,
                                         String sound, String wingsState) {
-    runner.$(query(db)
-            .statement("SELECT * FROM DUCK WHERE ID =" + id)
-            .validate("COLOR", color)
-            .validate("HEIGHT", height)
-            .validate("MATERIAL", material)
-            .validate("SOUND", sound)
-            .validate("WINGS_STATE", wingsState)
-    );
+    getDataFromDbFiveValidations(runner, db, "SELECT * FROM DUCK WHERE ID =" + id,
+            "COLOR", color, "HEIGHT", height, "MATERIAL", material,
+            "SOUND", sound, "WINGS_STATE", wingsState);
   }
 
   @Step("Проверка удаленной уточки в БД.")
   public void validateDeletedDuckInDatabase(TestCaseRunner runner, String id) {
-    runner.$(query(db)
-            .statement("SELECT COUNT(ID) \"Count\" FROM DUCK WHERE ID =" + id)
-            .validate("Count", "0")
-    );
+    getDataFromDbOneValidation(runner, db,
+            "SELECT COUNT(ID) \"Count\" FROM DUCK WHERE ID ="+ id, "Count", "0");
   }
 
   @Step("Создание уточки в БД.")
   protected void createDuckInDatabase(TestCaseRunner runner, String color, String height, String material,
                                       String sound, String wingsState) {
-    runner.$(sql(db)
-            .statement("INSERT INTO DUCK (ID, COLOR, HEIGHT, MATERIAL, SOUND, WINGS_STATE)\n" +
-                    "VALUES (${duckId}, '" + color + "', " + height + ", '" + material + "', '" + sound + "', '" + wingsState + "');"));
+    updateDataInDb(runner, db, "INSERT INTO DUCK (ID, COLOR, HEIGHT, MATERIAL, SOUND, WINGS_STATE)\n" +
+            "VALUES (${duckId}, '" + color + "', " + height + ", '" + material + "', '" + sound + "', '" + wingsState + "');");
   }
 
   @Step("Удаление уточки в БД.")
   protected void deleteDuckInDatabase(TestCaseRunner runner) {
-    runner.$(sql(db)
-            .statement("DELETE FROM DUCK WHERE ID=${duckId}"));
+    updateDataInDb(runner, db, "DELETE FROM DUCK WHERE ID=${duckId}");
   }
 
   @Step("Сохранение id созданной утки.")

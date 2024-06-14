@@ -11,8 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.test.context.ContextConfiguration;
 
+import static com.consol.citrus.actions.ExecuteSQLAction.Builder.sql;
+import static com.consol.citrus.actions.ExecuteSQLQueryAction.Builder.query;
 import static com.consol.citrus.http.actions.HttpActionBuilder.http;
 import static com.consol.citrus.validation.DelegatingPayloadVariableExtractor.Builder.fromBody;
 
@@ -21,6 +24,9 @@ public class BaseTest extends TestNGCitrusSpringSupport {
 
   @Autowired
   protected HttpClient duckService;
+
+  @Autowired
+  protected SingleConnectionDataSource db;
 
   @Description("Отправить get запрос.")
   protected void sendGetRequest(TestCaseRunner runner, HttpClient url, String path) {
@@ -126,6 +132,34 @@ public class BaseTest extends TestNGCitrusSpringSupport {
             .response(HttpStatus.OK)
             .message()
             .extract(fromBody().expression(variableValue, variableName))
+    );
+  }
+
+  @Description("Изменение, добавление или удаление данных в БД.")
+  protected void updateDataInDb(TestCaseRunner runner, SingleConnectionDataSource dataSource, String sql) {
+    runner.$(sql(dataSource).statement(sql));
+  }
+
+  @Description("Получение данных из БД и валидация одного значения.")
+  protected void getDataFromDbOneValidation(TestCaseRunner runner, SingleConnectionDataSource dataSource, String sql,
+                               String column, String value) {
+    runner.$(query(dataSource)
+            .statement(sql)
+            .validate(column, value));
+  }
+
+  @Description("Получение данных из БД и валидация 5 значений.")
+  protected void getDataFromDbFiveValidations(TestCaseRunner runner, SingleConnectionDataSource dataSource, String sql,
+                                              String columnOne, String valueOne, String columnTwo, String valueTwo,
+                                              String columnThree, String valueThree, String columnFour, String valueFour,
+                                              String columnFive, String valueFive) {
+    runner.$(query(dataSource)
+            .statement(sql)
+            .validate(columnOne, valueOne)
+            .validate(columnTwo, valueTwo)
+            .validate(columnThree, valueThree)
+            .validate(columnFour, valueFour)
+            .validate(columnFive, valueFive)
     );
   }
 }
