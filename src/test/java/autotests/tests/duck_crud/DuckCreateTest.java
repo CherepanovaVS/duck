@@ -26,6 +26,27 @@ public class DuckCreateTest extends DuckActionsClient {
   Duck duck4 = new Duck().color("yellow").height(0.1).material("rubber").sound("QUACK").wingsState(WingsState.ACTIVE);
   Duck duck5 = new Duck().color("yellow").height(0.1).material("rubber").sound("quack").wingsState(WingsState.FIXED);
 
+  @DataProvider(name = "duckList1")
+  public Object[][] DuckProvider1() {
+    return new Object[][]{
+            {"yellow", 0.1, "rubber", "quack", "ACTIVE",
+                    "{\n  \"color\": \"yellow\",\n  \"height\": 0.1,\n  \"id\": \"@isNumber()@\",\n  \"material\": \"rubber\",\n"
+                    + "  \"sound\": \"quack\",\n  \"wingsState\": \"ACTIVE\"\n}", HttpStatus.OK, null},
+            {"yellow", 5, "rubber", "quack", "ACTIVE",
+                    "{\n  \"color\": \"yellow\",\n  \"height\": 5.0,\n  \"id\": \"@isNumber()@\",\n  \"material\": \"rubber\",\n"
+                    + "  \"sound\": \"quack\",\n  \"wingsState\": \"ACTIVE\"\n}", HttpStatus.OK, null},
+            {"yellow", 10, "rubber", "quack", "ACTIVE",
+                    "{\n  \"color\": \"yellow\",\n  \"height\": 10.0,\n  \"id\": \"@isNumber()@\",\n  \"material\": \"rubber\",\n"
+                    + "  \"sound\": \"quack\",\n  \"wingsState\": \"ACTIVE\"\n}", HttpStatus.OK, null},
+            {"yellow", 0.1, "rubber", "QUACK", "ACTIVE",
+                    "{\n  \"color\": \"yellow\",\n  \"height\": 0.1,\n  \"id\": \"@isNumber()@\",\n  \"material\": \"rubber\",\n"
+                    + "  \"sound\": \"QUACK\",\n  \"wingsState\": \"ACTIVE\"\n}", HttpStatus.OK, null},
+            {"yellow", 0.1, "rubber", "quack", "FIXED",
+                    "{\n  \"color\": \"yellow\",\n  \"height\": 0.1,\n  \"id\": \"@isNumber()@\",\n  \"material\": \"rubber\",\n"
+                    + "  \"sound\": \"quack\",\n  \"wingsState\": \"FIXED\"\n}", HttpStatus.OK, null},
+    };
+  }
+
   @DataProvider(name = "duckList")
   public Object[][] DuckProvider() {
     return new Object[][]{
@@ -78,6 +99,22 @@ public class DuckCreateTest extends DuckActionsClient {
   public void successfulCreate(Object payload, String response, HttpStatus status,
                                @Optional @CitrusResource TestCaseRunner runner) {
     createDuck(runner, payload);
+    validateResponseUsingStringAndExtractVariable(runner, response, status);
+    runner.$(doFinally().actions(context->deleteDuckInDatabase(runner)));
+  }
+
+  @Test(description = "Проверка создания утки.", dataProvider = "duckList1")
+  @CitrusTest
+  @CitrusParameters({"color", "height", "material", "sound", "wingsState", "response", "status", "runner"})
+  public void successfulCreate1(String color, double height, String material, String sound, String wingsState,
+                                String response, HttpStatus status, @Optional @CitrusResource TestCaseRunner runner) {
+    Duck duck = new Duck()
+            .color(color)
+            .height(height)
+            .material(material)
+            .sound(sound)
+            .wingsState(WingsState.valueOf(wingsState));
+    createDuck(runner, duck);
     validateResponseUsingStringAndExtractVariable(runner, response, status);
     runner.$(doFinally().actions(context->deleteDuckInDatabase(runner)));
   }
