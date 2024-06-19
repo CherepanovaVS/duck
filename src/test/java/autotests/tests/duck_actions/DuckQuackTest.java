@@ -1,8 +1,6 @@
 package autotests.tests.duck_actions;
 
 import autotests.clients.DuckActionsClient;
-import autotests.payloads.Duck;
-import autotests.payloads.WingsState;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
@@ -22,20 +20,11 @@ public class DuckQuackTest extends DuckActionsClient {
   public void successfulQuackNotEvenId(@Optional @CitrusResource TestCaseRunner runner) {
     int soundCount = 2;
     int repetitionCount = 3;
-    Duck duck = new Duck()
-            .color("yellow")
-            .height(0.1)
-            .material("rubber")
-            .sound("quack")
-            .wingsState(WingsState.ACTIVE)
-            .id(701);
-    runner.variable("duckId", duck.id());
+    runner.variable("duckId", 709);
     runner.$(doFinally().actions(context->deleteDuckInDatabase(runner)));
-    createDuckInDatabase(runner, duck.color(), String.valueOf(duck.height()), duck.material(),
-            duck.sound(), String.valueOf(duck.wingsState()));
+    createDuckInDatabase(runner, "yellow", "0.1", "rubber", "quack", "ACTIVE");
     quackDuck(runner, String.valueOf(soundCount), String.valueOf(repetitionCount));
-
-    String responseSound = getResponseSound(duck.sound(), soundCount, repetitionCount);
+    String responseSound = getResponseSound("quack", soundCount, repetitionCount);
     validateResponseUsingString(runner, "{\n  \"sound\": \"" + responseSound + "\"\n}", HttpStatus.OK);
   }
 
@@ -44,19 +33,11 @@ public class DuckQuackTest extends DuckActionsClient {
   public void successfulQuackEvenId(@Optional @CitrusResource TestCaseRunner runner) {
     int soundCount = 2;
     int repetitionCount = 3;
-    Duck duck = new Duck()
-            .color("yellow")
-            .height(0.1)
-            .material("rubber")
-            .sound("quack")
-            .wingsState(WingsState.ACTIVE)
-            .id(700);
-    runner.variable("duckId", duck.id());
+    runner.variable("duckId", 708);
     runner.$(doFinally().actions(context->deleteDuckInDatabase(runner)));
-    createDuckInDatabase(runner, duck.color(), String.valueOf(duck.height()), duck.material(),
-            duck.sound(), String.valueOf(duck.wingsState()));
+    createDuckInDatabase(runner, "yellow", "0.1", "rubber", "quack", "ACTIVE");
     quackDuck(runner, String.valueOf(soundCount), String.valueOf(repetitionCount));
-    String responseSound = getResponseSound(duck.sound(), soundCount, repetitionCount);
+    String responseSound = getResponseSound("quack", soundCount, repetitionCount);
     validateResponseUsingString(runner, "{\n  \"sound\": \"" + responseSound + "\"\n}", HttpStatus.OK);
   }
 }

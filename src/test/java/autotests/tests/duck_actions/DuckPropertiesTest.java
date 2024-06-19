@@ -27,7 +27,7 @@ public class DuckPropertiesTest extends DuckActionsClient {
             .material("rubber")
             .sound("quack")
             .wingsState(WingsState.ACTIVE);
-    runner.variable("duckId", 701);
+    runner.variable("duckId", 707);
     runner.$(doFinally().actions(context->deleteDuckInDatabase(runner)));
     createDuckInDatabase(runner, duck.color(), String.valueOf(duck.height()), duck.material(),
             duck.sound(), String.valueOf(duck.wingsState()));
@@ -44,7 +44,7 @@ public class DuckPropertiesTest extends DuckActionsClient {
             .material("wood")
             .sound("quack")
             .wingsState(WingsState.ACTIVE);
-    runner.variable("duckId", 700);
+    runner.variable("duckId", 706);
     runner.$(doFinally().actions(context->deleteDuckInDatabase(runner)));
     createDuckInDatabase(runner, duck.color(), String.valueOf(duck.height()), duck.material(),
             duck.sound(), String.valueOf(duck.wingsState()));

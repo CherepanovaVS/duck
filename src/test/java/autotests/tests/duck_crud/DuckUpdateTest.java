@@ -49,7 +49,7 @@ public class DuckUpdateTest extends DuckActionsClient {
             .material("rubber")
             .sound("quack")
             .wingsState(WingsState.ACTIVE)
-            .id(700);
+            .id(701);
     runner.variable("duckId", duck.id());
     runner.$(doFinally().actions(context->deleteDuckInDatabase(runner)));
     createDuckInDatabase(runner, duck.color(), String.valueOf(duck.height()), duck.material(),
